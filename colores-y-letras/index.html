@@ -1,0 +1,1094 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Crea textos con colores HEX y degradados para Minecraft, letras especiales y símbolos compatibles.">
+<title>Colores y letras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una sola columna con tres pestañas (Colores / Letras / Símbolos). En el celular las pestañas
+   son una barra flotante abajo, con icono y nombre. Gris medio con una "linterna" plateada que sigue al dedo o al cursor.
+   Dos temas: oscuro (por defecto) y claro, con el botón de sol y luna junto a los idiomas. */
+:root {
+  color-scheme: dark;
+  --ink: #26282d;
+  --deck: #303238;
+  --raised: #3c3f46;
+  --field: #212327;
+  --rule: #42454d;
+  --rule-2: #555962;
+  --text: #f4f5f7;
+  --muted: #c9ccd3;
+  --dim: #9da1ab;
+  --accent: #aab4ff;
+  --accent-ink: #1c2040;
+  --accent-suave: #aab4ff22;
+  --hover: #ffffff14;
+  --sombra: #00000070;
+  --holder: #7f848e;
+  --silver: 236, 239, 245;
+  --luz: 1;
+  --warn: #ffd27a;
+  /* Vidrio líquido de la barra */
+  --vidrio: rgba(44, 46, 52, .72);
+  --vidrio-borde: rgba(255, 255, 255, .16);
+  --vidrio-brillo: rgba(255, 255, 255, .28);
+  --vidrio-activo: rgba(255, 255, 255, .11);
+  --tab-texto: #a6aab3;
+  --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+  --sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  /* Resorte: se pasa un poco de su lugar y vuelve, como si pesara. */
+  --resorte: linear(0, 0.047, 0.163, 0.318, 0.487, 0.65, 0.795, 0.914, 1.005, 1.068, 1.107, 1.124, 1.125, 1.115, 1.098, 1.077, 1.056, 1.036, 1.019, 1.006, 0.996, 0.989, 0.985, 0.984, 0.985, 0.986, 0.989, 0.991, 0.994, 0.996, 0.998, 1, 1);
+  --suave: cubic-bezier(.2, .8, .2, 1);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ink: #e6e8ec;
+  --deck: #f5f6f8;
+  --raised: #ffffff;
+  --field: #eceef1;
+  --rule: #d4d7de;
+  --rule-2: #c0c4cd;
+  --text: #1c1e23;
+  --muted: #474b54;
+  --dim: #6a6f79;
+  --accent: #4b57d1;
+  --accent-ink: #ffffff;
+  --accent-suave: #4b57d11c;
+  --hover: #0000000d;
+  --sombra: #0000002e;
+  --holder: #8b9099;
+  --silver: 120, 130, 155;
+  --luz: .8;
+  --warn: #9a6400;
+  --vidrio: rgba(250, 251, 253, .72);
+  --vidrio-borde: rgba(255, 255, 255, .75);
+  --vidrio-brillo: rgba(255, 255, 255, .9);
+  --vidrio-activo: rgba(255, 255, 255, .7);
+  --tab-texto: #5b606a;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { background: var(--ink); color: var(--text); font: 15px/1.5 var(--sans); min-height: 100%; }
+/* Linterna de fondo: un halo plateado donde está el dedo o el cursor */
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background: radial-gradient(420px circle at var(--x, 50%) var(--y, -30%), rgba(var(--silver), calc(.10 * var(--luz) * var(--on, 0))), transparent 65%);
+  transition: opacity .3s; }
+.wrap { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding-inline: 18px; padding-block: 22px 60px; display: flex; flex-direction: column; gap: 14px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+::placeholder { color: var(--holder); opacity: 1; }
+
+.top { display: flex; align-items: center; gap: 8px; }
+.top h1 { flex: 1; }
+/* Tema: sol (claro) y luna (oscuro) */
+.tema { flex: none; width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--rule-2); background: var(--raised); display: grid; place-items: center; padding: 0; color: var(--text); overflow: hidden; }
+.tema svg { grid-area: 1 / 1; width: 18px; height: 18px; transition: transform .45s var(--resorte), opacity .25s; }
+.tema .sol { transform: rotate(-90deg) scale(.4); opacity: 0; }
+[data-theme="light"] .tema .sol { transform: none; opacity: 1; }
+[data-theme="light"] .tema .luna { transform: rotate(90deg) scale(.4); opacity: 0; }
+h1 { font: 700 22px/1.2 var(--display); margin: 0; min-width: 0; }
+
+/* ---- Idioma: un botón que se estira hasta ser el menú (la caja nunca desaparece) ---- */
+.idioma { position: relative; flex: none; height: 38px; }
+.idioma-caja { position: absolute; inset-inline-end: 0; top: 0; z-index: 30; overflow: hidden; background: var(--raised); border: 1px solid var(--rule-2); border-radius: 12px;
+  transition: width .45s var(--suave), height .45s var(--suave), border-radius .45s var(--suave), box-shadow .45s; box-shadow: 0 0 0 transparent; }
+.idioma-caja.abierta { border-radius: 16px; box-shadow: 0 18px 40px var(--sombra); }
+.idioma-boton { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; background: none; border: 0; white-space: nowrap; font-size: 14px; font-weight: 500; }
+.idioma-boton svg { transition: transform .35s var(--suave); }
+.abierta .idioma-boton svg { transform: rotate(180deg); }
+.idioma-lista { list-style: none; margin: 0; padding: 4px 6px 8px; }
+.idioma-lista button { width: 100%; text-align: start; background: none; border: 0; border-radius: 9px; padding: 7px 10px; font-size: 14px; color: var(--muted); opacity: 0; transform: translateY(-4px); transition: opacity .2s, transform .2s, background .15s; }
+.abierta .idioma-lista button { opacity: 1; transform: none; transition-delay: calc(.18s + var(--i) * 25ms); }
+.idioma-lista button:hover, .idioma-lista button:focus-visible { background: var(--hover); color: var(--text); }
+.idioma-lista button[aria-current="true"] { color: var(--accent); font-weight: 700; }
+
+/* ---- Pestañas (barra con icono y nombre) ---- */
+/* Vidrio líquido: fondo translúcido que desenfoca y satura lo de atrás, con brillo en el borde de arriba */
+.tabs { align-self: center; position: relative; isolation: isolate; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--vidrio); border: 1px solid var(--vidrio-borde);
+  backdrop-filter: blur(22px) saturate(180%); -webkit-backdrop-filter: blur(22px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--vidrio-brillo), inset 0 -1px 1px rgba(255,255,255,.05), 0 10px 28px var(--sombra); }
+.tabs::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0) 55%), radial-gradient(120% 90% at 50% 120%, rgba(255,255,255,.08), transparent 60%); }
+.tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 76px; border: 0; border-radius: 999px; background: transparent; padding: 5px 12px 4px; color: var(--tab-texto); font-size: 11.5px; font-weight: 500; transition: background .25s, color .2s, box-shadow .25s; }
+.tabs button svg { width: 21px; height: 21px; transform: scale(calc(1 + var(--lupa, 0) * .45)) translateY(calc(var(--lupa, 0) * -3px)); transition: transform .12s ease-out; }
+.tabs button[aria-selected="true"] { color: var(--accent); background: var(--vidrio-activo); box-shadow: inset 0 1px 0 var(--vidrio-brillo), 0 1px 4px rgba(0,0,0,.12); }
+.tabs button:hover { color: var(--text); }
+.tabs button[aria-selected="true"]:hover { color: var(--accent); }
+.panel { display: flex; flex-direction: column; gap: 14px; }
+.panel.aparece { animation: aparecer .26s ease both; }
+@keyframes aparecer { from { opacity: 0; } }
+
+/* ---- Tarjetas con linterna: brillo por dentro y borde plateado cerca del dedo ---- */
+.caja, .estilo, .escena-marco { position: relative; }
+.caja { border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; border: 1px solid var(--rule);
+  background: radial-gradient(320px circle at var(--lx, -999px) var(--ly, -999px), rgba(var(--silver), calc(.09 * var(--on, 0))), transparent 70%), var(--deck); }
+.caja::before, .estilo::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none;
+  background: radial-gradient(220px circle at var(--lx, -999px) var(--ly, -999px), rgba(var(--silver), calc(.75 * var(--on, 0))), transparent 65%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); }
+.caja > h2 { margin: 0; font: 700 13px var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); text-align: center; }
+.fila { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.fila.centro { justify-content: center; }
+.fila.entre { justify-content: space-between; }
+
+#codigo { width: 100%; min-height: 76px; resize: vertical; background: var(--field); border: 1px solid var(--rule); border-radius: 10px; padding: 10px 12px; font: 13px/1.5 var(--mono); word-break: break-all; }
+.medida { font: 12px var(--mono); color: var(--dim); }
+.medida.pasa { color: var(--warn); }
+
+/* ---- Vista previa ---- */
+.vistas { display: flex; justify-content: center; gap: 4px; }
+.vistas button { background: none; border: 0; border-bottom: 2px solid transparent; padding: 4px 10px 6px; color: var(--muted); font-size: 14px; }
+.vistas button[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 700; }
+.escena { border-radius: 12px; overflow: hidden; min-height: 150px; display: flex; color: #fff; font-size: 19px; line-height: 1.35; }
+.escena.simple { background: #1e1f22; align-items: center; justify-content: center; padding: 20px 16px; text-align: center; font-size: 30px; }
+.escena.mundo { position: relative; background: linear-gradient(#5d86c9 0 36%, #4a7a37 36% 44%, #5b3c22 44%); }
+.escena.mundo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(90deg, #00000012 0 16px, transparent 16px 32px), repeating-linear-gradient(0deg, #00000012 0 16px, transparent 16px 32px); }
+.chat { position: absolute; inset-inline: 10px; bottom: 12px; max-width: 600px; background: rgba(0,0,0,.55); padding: 6px 9px; display: flex; flex-direction: column; gap: 2px; z-index: 1; font-size: 17px; }
+.gris { color: #aaa; } .blanco { color: #fff; } .amarillo { color: #ff5; } .verde { color: #5f5; }
+.vacio { color: #777; font-weight: 400; }
+.escena.inv { background: #c6c6c6; align-items: flex-start; justify-content: center; padding: 22px 12px; }
+.slot { width: 56px; height: 56px; flex: none; background: #8b8b8b; border: 3px solid; border-color: #373737 #fff #fff #373737; display: grid; place-items: center; margin-top: 4px; }
+.slot svg { width: 44px; height: 44px; }
+.tooltip { margin-inline-start: 10px; min-width: 0; max-width: 100%; background: #100010f2; padding: 6px 10px 8px; border: 2px solid #100010; outline: 2px solid #5000ff; outline-offset: -4px; font-size: 17px; }
+.tooltip .nombre { overflow-wrap: anywhere; margin-bottom: 4px; }
+
+#texto { width: 100%; background: var(--field); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; font-size: 18px; text-align: center; }
+.aviso-emoji { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; background: #ffd27a14; border: 1px solid #ffd27a55; border-radius: 10px; padding: 8px 10px; font-size: 13px; color: var(--warn); margin-top: 8px; }
+.aviso-emoji button { background: var(--raised); border: 1px solid var(--rule-2); border-radius: 8px; padding: 3px 9px; font-size: 13px; color: var(--text); }
+
+.contador { display: inline-flex; align-items: center; gap: 12px; }
+.redondo { width: 36px; height: 36px; border-radius: 10px; border: 1px solid var(--rule-2); background: var(--raised); font-size: 20px; line-height: 1; }
+.redondo:disabled { opacity: .35; cursor: default; }
+.contador b { font: 700 22px var(--mono); min-width: 2ch; text-align: center; }
+.dado { border: 1px solid var(--accent); background: var(--accent-suave); color: var(--text); border-radius: 12px; padding: 8px 20px; font-weight: 700; }
+.paleta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.color { width: 92px; border: 1px solid var(--rule-2); border-radius: 12px; background: var(--field); padding: 6px; display: flex; flex-direction: column; gap: 6px; cursor: grab; }
+.color.fijo { border-color: var(--warn); }
+.color.arrastrando { opacity: .4; }
+.color.sobre { border-color: var(--accent); }
+/* Spring: la tarjeta cae, se pasa un poquito de su lugar y vuelve */
+.color.cae { animation: caer .8s var(--resorte) both; animation-delay: calc(var(--i, 0) * 70ms); }
+@keyframes caer { from { opacity: 0; transform: translateY(-38px); } 30% { opacity: 1; } }
+.muestra { position: relative; height: 40px; border-radius: 7px; overflow: hidden; }
+.muestra input { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); border: 0; padding: 0; cursor: pointer; opacity: 0; }
+.candado { position: absolute; right: 3px; top: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 6px; border: 0; background: #000000a0; font-size: 12px; line-height: 22px; padding: 0; }
+.gotero { position: absolute; left: 3px; top: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 6px; border: 0; background: #000000a0; color: #fff; padding: 0; display: grid; place-items: center; }
+.gotero svg { width: 13px; height: 13px; }
+.color .pie { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--dim); direction: ltr; }
+.color .pie input { width: 7.5ch; background: transparent; border: 0; padding: 0; font: 11px var(--mono); color: var(--muted); text-align: right; }
+.color .pie input.mal { color: #ff8fa6; }
+.tip { font-size: 12px; color: var(--dim); text-align: center; margin: 0; }
+.recientes { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.reciente { width: 64px; height: 22px; border-radius: 6px; border: 1px solid var(--rule-2); padding: 0; }
+.pegar { display: flex; gap: 8px; }
+.pegar input { flex: 1; min-width: 0; background: var(--field); border: 1px solid var(--rule); border-radius: 10px; padding: 8px 10px; font: 13px var(--mono); direction: ltr; }
+
+.check { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--rule-2); background: var(--raised); border-radius: 999px; padding: 5px 12px 5px 9px; font-size: 14px; cursor: pointer; }
+.check:has(input:checked) { border-color: var(--accent); background: var(--accent-suave); }
+.check input { accent-color: var(--accent); margin: 0; }
+.chip { border: 1px solid var(--rule-2); background: var(--raised); border-radius: 999px; padding: 5px 12px; font-size: 14px; }
+.separa { height: 1px; background: var(--rule); }
+
+.campos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.campos label { display: flex; flex-direction: column; gap: 4px; font-size: 13px; color: var(--dim); text-align: center; min-width: 0; }
+select { width: 100%; background: var(--field); border: 1px solid var(--rule); border-radius: 10px; padding: 8px 10px; }
+.boton { background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 10px; padding: 8px 16px; font-weight: 700; font-size: 14px; }
+.boton.suave { background: var(--raised); color: var(--text); border: 1px solid var(--rule-2); font-weight: 500; }
+
+/* ---- Letras ---- */
+#textoLetras { width: 100%; min-height: 64px; resize: vertical; background: var(--field); border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px; font-size: 18px; }
+.lista { display: flex; flex-direction: column; gap: 6px; }
+.estilo { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: 12px; padding: 8px 10px;
+  background: radial-gradient(240px circle at var(--lx, -999px) var(--ly, -999px), rgba(var(--silver), calc(.08 * var(--on, 0))), transparent 70%), var(--deck); }
+.estilo .res { font-size: 18px; overflow-wrap: anywhere; min-width: 0; }
+.mini { background: var(--raised); border: 1px solid var(--rule-2); border-radius: 8px; padding: 5px 10px; font-size: 12px; color: var(--muted); white-space: nowrap; }
+.mini.ok { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 700; }
+.tag { font: 600 10px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: #8ff0c4; border: 1px solid #8ff0c455; border-radius: 5px; padding: 0 5px; margin-inline-start: 6px; white-space: nowrap; vertical-align: 2px; }
+/* Stagger: cada fila entra una décima de segundo después de la anterior */
+.entra { animation: subir .4s var(--suave) both; animation-delay: calc(var(--i, 0) * 100ms); }
+@keyframes subir { from { opacity: 0; transform: translateY(12px); } }
+
+/* ---- Símbolos ---- */
+.seg { display: inline-flex; border: 1px solid var(--rule-2); border-radius: 10px; overflow: hidden; }
+.seg button { background: transparent; border: 0; padding: 6px 12px; font-size: 13px; color: var(--muted); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 700; }
+.cat h3 { margin: 0 0 6px; font: 600 11px var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+.simbolos { display: flex; flex-wrap: wrap; gap: 5px; }
+.simbolo { position: relative; min-width: 40px; height: 40px; padding: 0 8px; border-radius: 9px; border: 1px solid var(--rule); background: var(--field); font-size: 20px; line-height: 1;
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", "Noto Sans Symbols", "DejaVu Sans", var(--sans); font-variant-emoji: text;
+  transform: scale(calc(1 + var(--lupa, 0) * .55)); transition: transform .12s ease-out, border-color .12s; z-index: calc(1 + round(var(--lupa, 0) * 10)); }
+.simbolo:hover { border-color: var(--accent); }
+.simbolo.largo { font-size: 15px; letter-spacing: 1px; }
+
+#aviso { position: fixed; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%) translateY(20px); background: #f0f2f6; color: #23252b; font-weight: 700; padding: 8px 16px; border-radius: 12px; opacity: 0; transition: .2s; pointer-events: none; max-width: calc(100% - 32px); text-align: center; z-index: 40; }
+#aviso.ver { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* Crossfade y elemento compartido (transiciones de vista del navegador) */
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .26s; animation-timing-function: ease; }
+::view-transition-group(titulo) { animation-duration: .55s; animation-timing-function: var(--suave); z-index: 5; }
+::view-transition-old(titulo), ::view-transition-new(titulo) { animation-duration: .55s; height: 100%; object-fit: contain; }
+
+/* Celular: la barra de pestañas flota abajo, como una app */
+@media (max-width: 640px) {
+  .wrap { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
+  .tabs { position: fixed; z-index: 25; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  #aviso { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
+  .campos { grid-template-columns: 1fr; }
+  .escena.simple { font-size: 24px; }
+  .escena.mundo { min-height: 190px; }
+  .color { width: 84px; }
+  .tooltip { font-size: 15px; }
+  h1 { font-size: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before { transition: none !important; animation: none !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<script>try { if (localStorage.getItem("cyl-tema") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}</script>
+<div class="wrap">
+  <div class="top">
+    <h1 data-t="title">Colores y letras</h1>
+    <div class="idioma" id="idioma">
+      <div class="idioma-caja" id="idiomaCaja">
+        <button type="button" class="idioma-boton" id="idiomaBoton" aria-haspopup="true" aria-expanded="false">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="transform:none"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>
+          <span id="idiomaNombre">Español</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+        </button>
+        <ul class="idioma-lista" id="idiomaLista" role="menu"></ul>
+      </div>
+    </div>
+    <button type="button" class="tema" id="tema">
+      <svg class="luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 14.5A8.5 8.5 0 1 1 9.5 3.5a7 7 0 0 0 11 11Z"/></svg>
+      <svg class="sol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2v2.2M12 19.8V22M2 12h2.2M19.8 12H22M4.9 4.9l1.6 1.6M17.5 17.5l1.6 1.6M4.9 19.1l1.6-1.6M17.5 6.5l1.6-1.6"/></svg>
+    </button>
+  </div>
+
+  <nav class="tabs" role="tablist" id="tabs">
+    <button type="button" role="tab" id="tab-colores" aria-selected="true" aria-controls="p-colores">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18c1.1 0 1.8-.8 1.8-1.8 0-.5-.2-.9-.5-1.2-.3-.3-.5-.7-.5-1.2 0-1 .8-1.8 1.8-1.8H17a4 4 0 0 0 4-4c0-4.4-4-8-9-8Z"/><circle cx="7.5" cy="11" r="1.2"/><circle cx="10.5" cy="7" r="1.2"/><circle cx="15.5" cy="7.5" r="1.2"/></svg>
+      <span data-t="tabColores">Colores</span>
+    </button>
+    <button type="button" role="tab" id="tab-letras" aria-selected="false" aria-controls="p-letras">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 19 8.5 5h1L15 19M5.3 14h7.4"/><path d="M17 11.5a2.6 2.6 0 1 1 0 5.2 2.6 2.6 0 0 1 0-5.2ZM19.6 10.5V19"/></svg>
+      <span data-t="tabLetras">Letras</span>
+    </button>
+    <button type="button" role="tab" id="tab-simbolos" aria-selected="false" aria-controls="p-simbolos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.4 6.7 19.4l1.2-6L3.4 9.3l6-.7Z"/></svg>
+      <span data-t="tabSimbolos">Símbolos</span>
+    </button>
+  </nav>
+
+  <!-- ================= COLORES ================= -->
+  <div class="panel" id="p-colores" role="tabpanel" aria-labelledby="tab-colores">
+    <section class="caja">
+      <h2 data-t="codigo">Código de salida</h2>
+      <textarea id="codigo" readonly spellcheck="false" dir="ltr" aria-label="Código"></textarea>
+      <div class="fila entre">
+        <span class="medida" id="medida"></span>
+        <span class="fila">
+          <button class="boton suave" type="button" id="compartir" data-t="compartir">Copiar enlace</button>
+          <button class="boton" type="button" id="copiar" data-t="copiarCodigo">Copiar código</button>
+        </span>
+      </div>
+    </section>
+
+    <section class="caja">
+      <div class="vistas" role="group">
+        <button type="button" data-vista="simple" aria-pressed="true" data-t="vTexto">Texto</button>
+        <button type="button" data-vista="chat" aria-pressed="false" data-t="vChat">Chat</button>
+        <button type="button" data-vista="item" aria-pressed="false" data-t="vItem">Ítem</button>
+      </div>
+      <div id="escena" class="escena simple"></div>
+    </section>
+
+    <div>
+      <input id="texto" type="text" maxlength="48" value="" autocomplete="off" data-tph="placeholder" placeholder="Escribe aquí tu texto…" aria-label="Texto">
+      <div class="aviso-emoji" id="avisoTexto" hidden></div>
+    </div>
+
+    <section class="caja">
+      <h2 data-t="paleta">Paleta de colores</h2>
+      <div class="fila centro">
+        <div class="contador">
+          <button class="redondo" type="button" id="menos" aria-label="−">−</button>
+          <b id="cuantos">2</b>
+          <button class="redondo" type="button" id="mas" aria-label="+">+</button>
+        </div>
+      </div>
+      <div class="paleta" id="paleta"></div>
+      <div class="fila centro"><button class="dado" type="button" id="dado">🎲 <span data-t="aleatorio">Aleatorio</span></button></div>
+      <p class="tip" data-t="tipPaleta"></p>
+      <div class="separa"></div>
+      <p class="tip" data-t="recientes">Recientes</p>
+      <div class="recientes" id="recientes"></div>
+    </section>
+
+    <section class="caja">
+      <h2 data-t="estilo">Estilo</h2>
+      <div class="fila centro">
+        <label class="check"><input type="checkbox" id="negrita" checked> <span data-t="negrita">Negrita</span></label>
+        <label class="check"><input type="checkbox" id="cursiva"> <span data-t="cursiva">Cursiva</span></label>
+        <label class="check"><input type="checkbox" id="subrayado"> <span data-t="subrayado">Subrayado</span></label>
+        <label class="check"><input type="checkbox" id="tachado"> <span data-t="tachado">Tachado</span></label>
+      </div>
+      <div class="separa"></div>
+      <div class="fila centro">
+        <button class="chip" type="button" id="izq" aria-label="←">←</button>
+        <button class="chip" type="button" id="invertir" data-t="invertir">Invertir</button>
+        <button class="chip" type="button" id="der" aria-label="→">→</button>
+      </div>
+    </section>
+
+    <section class="caja">
+      <h2 data-t="config">Configuración</h2>
+      <div class="campos">
+        <label><span data-t="formato">Formato</span><select id="formato"></select></label>
+        <label><span data-t="combinacion">Combinación lista</span><select id="preajuste"></select></label>
+      </div>
+      <p class="tip" id="tipClasico" data-t="tipClasico" hidden></p>
+      <label class="tip" for="pegado" style="text-align:start" data-t="pegarLabel"></label>
+      <div class="pegar">
+        <input id="pegado" type="text" placeholder="&amp;#ff5555H&amp;#ff8a55o…  /  <gradient:#ff5555:#ffd166>…" spellcheck="false">
+        <button class="boton suave" type="button" id="cargar" data-t="cargar">Cargar</button>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= LETRAS ================= -->
+  <div class="panel" id="p-letras" role="tabpanel" aria-labelledby="tab-letras" hidden>
+    <section class="caja">
+      <h2 data-t="letrasTit">Escribe y copia</h2>
+      <textarea id="textoLetras" spellcheck="false" data-tph="placeholder" placeholder="Escribe aquí tu texto…" aria-label="Texto"></textarea>
+      <div class="aviso-emoji" id="avisoLetras" hidden></div>
+      <p class="tip" data-t="letrasTip"></p>
+    </section>
+    <div class="lista" id="lista"></div>
+  </div>
+
+  <!-- ================= SÍMBOLOS ================= -->
+  <div class="panel" id="p-simbolos" role="tabpanel" aria-labelledby="tab-simbolos" hidden>
+    <section class="caja">
+      <p class="tip" data-t="simbTip"></p>
+      <div class="fila centro">
+        <span class="tip" data-t="alTocar">Al tocar:</span>
+        <div class="seg" role="group">
+          <button type="button" data-modo="anadir" aria-pressed="true" data-t="modoAnadir">Añadir al texto</button>
+          <button type="button" data-modo="copiar" aria-pressed="false" data-t="modoCopiar">Copiar</button>
+        </div>
+      </div>
+    </section>
+    <section class="caja" id="categorias"></section>
+  </div>
+</div>
+<div id="aviso" role="status"></div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var SIN_MOV = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  // ---------- Idiomas ----------
+  var KEYS = ["title","tabColores","tabLetras","tabSimbolos","codigo","copiarCodigo","caracteres","limite","vTexto","vChat","vItem","placeholder",
+    "paleta","aleatorio","tipPaleta","recientes","estilo","negrita","cursiva","subrayado","tachado","invertir","config","formato","combinacion","ninguna",
+    "pegarLabel","cargar","chat1","chat2","chat3","item1","dano","item2","letrasTit","letrasTip","aColores","copiar","simbTip","alTocar","modoAnadir",
+    "modoCopiar","anadido","copiado","avisoEmoji","cambiar","quitar","cargados","noColores","pegaPrimero","listo","seleccionado",
+    "c_estrellas","c_corazones","c_flechas","c_combate","c_rangos","c_naturaleza","c_ocio","c_estado","c_caras","c_marcos","c_numeros","c_barras","idioma","compartir","enlaceCopiado","tipClasico","cuentagotas"];
+  var L = {
+    es: ["Colores y letras","Colores","Letras","Símbolos","Código de salida","Copiar código","{n} caracteres","pasa el límite del chat (256)","Texto","Chat","Ítem","Escribe aquí tu texto…",
+      "Paleta de colores","Aleatorio","Toca un color para cambiarlo, escribe su HEX o arrástralo para reordenar. El 🔓 lo fija para que «Aleatorio» no lo cambie.","Recientes","Estilo","Negrita","Cursiva","Subrayado","Tachado","Invertir","Configuración","Formato","Combinación lista","Ninguna",
+      "¿Ya tienes un código? Pégalo y cargo sus colores y su texto:","Cargar","¿alguien para bedwars?","¡Bienvenidos al server!","Notch se unió al juego","Objeto de ejemplo","Daño","Clic derecho para usar","Escribe y copia","Toca «Copiar» en el estilo que quieras. «A Colores» lo pasa a la pestaña de colores.","A Colores","Copiar","Solo símbolos que se deberían ver en Minecraft. Pruébalos en tu server.","Al tocar:","Añadir al texto",
+      "Copiar","Añadido al texto","Copiado","Esto puede no verse en Minecraft:","Cambiar por","Quitar","Cargué {n} colores","No encontré colores en ese código","Pega primero un código","Listo: ahora ponle colores","Seleccionado: cópialo con Ctrl+C",
+      "Estrellas","Corazones","Flechas","Combate","Coronas y rangos","Naturaleza","Música y ocio","Estado","Caras y manos","Marcos","Números","Barras","Idioma","Copiar enlace","Enlace copiado","Cada letra usa el color clásico (&0–&f) más parecido.","Cuentagotas"],
+    en: ["Colors & Fonts","Colors","Fonts","Symbols","Output code","Copy code","{n} characters","over the chat limit (256)","Text","Chat","Item","Type your text here…",
+      "Color palette","Random","Tap a color to change it, type its HEX or drag it to reorder. 🔓 locks it so Random won't change it.","Recent","Style","Bold","Italic","Underline","Strikethrough","Reverse","Settings","Format","Preset","None",
+      "Already have a code? Paste it and I'll load its colors and text:","Load","anyone up for bedwars?","Welcome to the server!","Notch joined the game","Example item","Damage","Right-click to use","Type and copy","Tap Copy on the style you want. To Colors sends it to the colors tab.","To Colors","Copy","Only symbols that should show in Minecraft. Test them on your server.","On tap:","Add to text",
+      "Copy","Added to text","Copied","This may not show in Minecraft:","Replace with","Remove","Loaded {n} colors","No colors found in that code","Paste a code first","Done: now add colors","Selected: copy it with Ctrl+C",
+      "Stars","Hearts","Arrows","Combat","Crowns & ranks","Nature","Music & fun","Status","Faces & hands","Frames","Numbers","Bars","Language","Copy link","Link copied","Each letter uses the closest classic color (&0–&f).","Eyedropper"],
+    fr: ["Couleurs et lettres","Couleurs","Lettres","Symboles","Code de sortie","Copier le code","{n} caractères","dépasse la limite du chat (256)","Texte","Chat","Objet","Écris ton texte ici…",
+      "Palette de couleurs","Aléatoire","Touche une couleur pour la changer, écris son HEX ou fais-la glisser pour réordonner. 🔓 la verrouille pour qu'Aléatoire ne la change pas.","Récents","Style","Gras","Italique","Souligné","Barré","Inverser","Réglages","Format","Préréglage","Aucun",
+      "Tu as déjà un code ? Colle-le et je charge ses couleurs et son texte :","Charger","quelqu'un pour un bedwars ?","Bienvenue sur le serveur !","Notch a rejoint la partie","Objet d'exemple","Dégâts","Clic droit pour utiliser","Écris et copie","Touche Copier sur le style voulu. Vers Couleurs l'envoie à l'onglet couleurs.","Vers Couleurs","Copier","Seulement des symboles qui devraient s'afficher dans Minecraft. Teste-les sur ton serveur.","Au toucher :","Ajouter au texte",
+      "Copier","Ajouté au texte","Copié","Ceci peut ne pas s'afficher dans Minecraft :","Remplacer par","Retirer","{n} couleurs chargées","Aucune couleur trouvée dans ce code","Colle d'abord un code","C'est fait : ajoute des couleurs","Sélectionné : copie-le avec Ctrl+C",
+      "Étoiles","Cœurs","Flèches","Combat","Couronnes et rangs","Nature","Musique et loisirs","État","Visages et mains","Cadres","Nombres","Barres","Langue","Copier le lien","Lien copié","Chaque lettre utilise la couleur classique (&0–&f) la plus proche.","Pipette"],
+    it: ["Colori e lettere","Colori","Lettere","Simboli","Codice di uscita","Copia codice","{n} caratteri","supera il limite della chat (256)","Testo","Chat","Oggetto","Scrivi qui il tuo testo…",
+      "Tavolozza colori","Casuale","Tocca un colore per cambiarlo, scrivi il suo HEX o trascinalo per riordinare. 🔓 lo blocca così Casuale non lo cambia.","Recenti","Stile","Grassetto","Corsivo","Sottolineato","Barrato","Inverti","Impostazioni","Formato","Combinazione pronta","Nessuna",
+      "Hai già un codice? Incollalo e carico i suoi colori e il testo:","Carica","qualcuno per bedwars?","Benvenuti nel server!","Notch è entrato in gioco","Oggetto di esempio","Danno","Clic destro per usare","Scrivi e copia","Tocca Copia sullo stile che vuoi. A Colori lo manda alla scheda colori.","A Colori","Copia","Solo simboli che dovrebbero vedersi in Minecraft. Provali nel tuo server.","Al tocco:","Aggiungi al testo",
+      "Copia","Aggiunto al testo","Copiato","Questo potrebbe non vedersi in Minecraft:","Sostituisci con","Rimuovi","Caricati {n} colori","Nessun colore trovato in quel codice","Incolla prima un codice","Fatto: ora aggiungi i colori","Selezionato: copialo con Ctrl+C",
+      "Stelle","Cuori","Frecce","Combattimento","Corone e gradi","Natura","Musica e svago","Stato","Facce e mani","Cornici","Numeri","Barre","Lingua","Copia link","Link copiato","Ogni lettera usa il colore classico (&0–&f) più simile.","Contagocce"],
+    zh: ["颜色与字体","颜色","字体","符号","输出代码","复制代码","{n} 个字符","超过聊天上限 (256)","文字","聊天","物品","在这里输入你的文字…",
+      "调色板","随机","点击颜色可更改，输入 HEX 或拖动重新排序。🔓 可锁定颜色，随机时不会改变。","最近","样式","粗体","斜体","下划线","删除线","反转","设置","格式","预设","无",
+      "已有代码？粘贴后我会读取其中的颜色和文字：","读取","有人玩起床战争吗？","欢迎来到服务器！","Notch 加入了游戏","示例物品","伤害","右键使用","输入并复制","在想要的样式上点“复制”。“到颜色”会把它发送到颜色页。","到颜色","复制","只列出应能在 Minecraft 中显示的符号，请在你的服务器上测试。","点击时：","添加到文字",
+      "复制","已添加到文字","已复制","这些可能无法在 Minecraft 中显示：","替换为","删除","已读取 {n} 种颜色","该代码中没有找到颜色","请先粘贴代码","完成：现在添加颜色","已选中：用 Ctrl+C 复制",
+      "星星","爱心","箭头","战斗","皇冠与等级","自然","音乐与娱乐","状态","表情与手势","边框","数字","进度条","语言","复制链接","链接已复制","每个字母使用最接近的经典颜色（&0–&f）。","取色器"],
+    ja: ["カラー＆フォント","カラー","フォント","記号","出力コード","コードをコピー","{n} 文字","チャットの上限 (256) を超えています","テキスト","チャット","アイテム","ここにテキストを入力…",
+      "カラーパレット","ランダム","色をタップして変更、HEX を入力、ドラッグで並べ替え。🔓 で固定するとランダムで変わりません。","最近","スタイル","太字","斜体","下線","取り消し線","反転","設定","形式","プリセット","なし",
+      "コードを持っていますか？貼り付けると色とテキストを読み込みます：","読み込む","誰かベッドウォーズやらない？","サーバーへようこそ！","Notch がゲームに参加しました","サンプルアイテム","攻撃力","右クリックで使用","入力してコピー","使いたいスタイルの「コピー」をタップ。「カラーへ」でカラーのタブに送ります。","カラーへ","コピー","Minecraft で表示されるはずの記号だけです。サーバーで試してください。","タップしたとき：","テキストに追加",
+      "コピー","テキストに追加しました","コピーしました","Minecraft で表示されない可能性があります：","置き換え","削除","{n} 色を読み込みました","そのコードに色が見つかりません","先にコードを貼り付けてください","完了：色をつけましょう","選択しました：Ctrl+C でコピー",
+      "星","ハート","矢印","戦闘","王冠とランク","自然","音楽と遊び","状態","顔と手","枠","数字","バー","言語","リンクをコピー","リンクをコピーしました","各文字に最も近いクラシックカラー（&0–&f）を使います。","スポイト"],
+    ko: ["색상 & 글꼴","색상","글꼴","기호","출력 코드","코드 복사","{n}자","채팅 제한(256) 초과","텍스트","채팅","아이템","여기에 텍스트를 입력하세요…",
+      "색상 팔레트","무작위","색을 눌러 바꾸고, HEX를 입력하거나 끌어서 순서를 바꾸세요. 🔓로 고정하면 무작위로 바뀌지 않아요.","최근","스타일","굵게","기울임","밑줄","취소선","뒤집기","설정","형식","프리셋","없음",
+      "이미 코드가 있나요? 붙여넣으면 색과 텍스트를 불러올게요:","불러오기","배드워즈 할 사람?","서버에 오신 걸 환영해요!","Notch님이 게임에 참여했습니다","예시 아이템","공격력","우클릭으로 사용","입력하고 복사","원하는 스타일의 '복사'를 누르세요. '색상으로'는 색상 탭으로 보냅니다.","색상으로","복사","Minecraft에서 보일 기호만 모았어요. 서버에서 확인해 보세요.","누르면:","텍스트에 추가",
+      "복사","텍스트에 추가됨","복사됨","Minecraft에서 안 보일 수 있어요:","바꾸기","삭제","색 {n}개를 불러왔어요","그 코드에서 색을 찾지 못했어요","먼저 코드를 붙여넣으세요","완료: 이제 색을 입히세요","선택됨: Ctrl+C로 복사하세요",
+      "별","하트","화살표","전투","왕관과 등급","자연","음악과 놀이","상태","얼굴과 손","테두리","숫자","막대","언어","링크 복사","링크 복사됨","각 글자에 가장 가까운 클래식 색(&0–&f)을 사용해요.","스포이트"],
+    de: ["Farben & Schriften","Farben","Schriften","Symbole","Ausgabecode","Code kopieren","{n} Zeichen","über dem Chat-Limit (256)","Text","Chat","Item","Schreib hier deinen Text…",
+      "Farbpalette","Zufall","Tippe auf eine Farbe, um sie zu ändern, gib ihren HEX ein oder zieh sie zum Sortieren. 🔓 sperrt sie, damit Zufall sie nicht ändert.","Zuletzt","Stil","Fett","Kursiv","Unterstrichen","Durchgestrichen","Umkehren","Einstellungen","Format","Vorlage","Keine",
+      "Hast du schon einen Code? Füg ihn ein und ich lade Farben und Text:","Laden","wer spielt bedwars?","Willkommen auf dem Server!","Notch hat das Spiel betreten","Beispiel-Item","Schaden","Rechtsklick zum Benutzen","Schreiben und kopieren","Tippe bei deinem Stil auf Kopieren. Zu Farben schickt ihn zum Farben-Tab.","Zu Farben","Kopieren","Nur Symbole, die in Minecraft angezeigt werden sollten. Teste sie auf deinem Server.","Beim Tippen:","Zum Text hinzufügen",
+      "Kopieren","Zum Text hinzugefügt","Kopiert","Das wird in Minecraft evtl. nicht angezeigt:","Ersetzen durch","Entfernen","{n} Farben geladen","Keine Farben in diesem Code gefunden","Füg zuerst einen Code ein","Fertig: jetzt Farben hinzufügen","Markiert: kopier es mit Strg+C",
+      "Sterne","Herzen","Pfeile","Kampf","Kronen & Ränge","Natur","Musik & Spaß","Status","Gesichter & Hände","Rahmen","Zahlen","Balken","Sprache","Link kopieren","Link kopiert","Jeder Buchstabe nutzt die ähnlichste klassische Farbe (&0–&f).","Pipette"],
+    ar: ["الألوان والخطوط","الألوان","الخطوط","الرموز","كود الإخراج","نسخ الكود","{n} حرفًا","يتجاوز حد الدردشة (256)","نص","دردشة","عنصر","اكتب نصك هنا…",
+      "لوحة الألوان","عشوائي","اضغط على لون لتغييره، أو اكتب رمز HEX، أو اسحبه لإعادة الترتيب. 🔓 يثبّته حتى لا يغيّره «عشوائي».","الأخيرة","النمط","عريض","مائل","تسطير","يتوسطه خط","عكس","الإعدادات","الصيغة","مجموعة جاهزة","لا شيء",
+      "لديك كود بالفعل؟ الصقه وسأحمّل ألوانه ونصه:","تحميل","من يلعب بيدوورز؟","أهلًا بكم في السيرفر!","انضم Notch إلى اللعبة","عنصر تجريبي","الضرر","انقر بالزر الأيمن للاستخدام","اكتب وانسخ","اضغط «نسخ» على النمط الذي تريده. «إلى الألوان» يرسله إلى تبويب الألوان.","إلى الألوان","نسخ","رموز يُفترض أن تظهر في ماينكرافت فقط. جرّبها في سيرفرك.","عند الضغط:","إضافة إلى النص",
+      "نسخ","أُضيف إلى النص","تم النسخ","قد لا يظهر هذا في ماينكرافت:","استبدال بـ","حذف","تم تحميل {n} ألوان","لم أجد ألوانًا في هذا الكود","الصق كودًا أولًا","تم: أضف الألوان الآن","تم التحديد: انسخه بـ Ctrl+C",
+      "نجوم","قلوب","أسهم","قتال","تيجان ورتب","طبيعة","موسيقى وتسلية","الحالة","وجوه وأيدٍ","إطارات","أرقام","أشرطة","اللغة","نسخ الرابط","تم نسخ الرابط","كل حرف يستخدم أقرب لون كلاسيكي (&0–&f).","قطّارة الألوان"],
+    ga: ["Dathanna agus Clónna","Dathanna","Clónna","Siombailí","Cód aschuir","Cóipeáil an cód","{n} carachtar","thar theorainn an chomhrá (256)","Téacs","Comhrá","Earra","Scríobh do théacs anseo…",
+      "Pailéad dathanna","Randamach","Tapáil dath chun é a athrú, scríobh a HEX nó tarraing é chun an t-ord a athrú. Glasálann 🔓 é ionas nach n-athróidh Randamach é.","Le déanaí","Stíl","Trom","Iodálach","Folínithe","Líne tríd","Aisiompaigh","Socruithe","Formáid","Réamhshocrú","Dada",
+      "An bhfuil cód agat cheana? Greamaigh é agus luchtóidh mé a dhathanna agus a théacs:","Luchtaigh","aon duine le haghaidh bedwars?","Fáilte go dtí an freastalaí!","Tháinig Notch isteach sa chluiche","Earra samplach","Damáiste","Deaschliceáil chun é a úsáid","Scríobh agus cóipeáil","Tapáil Cóipeáil ar an stíl is mian leat. Seolann Chuig Dathanna é chuig an táb dathanna.","Chuig Dathanna","Cóipeáil","Siombailí ba chóir a bheith le feiceáil in Minecraft amháin. Tástáil ar do fhreastalaí iad.","Ar thapáil:","Cuir leis an téacs",
+      "Cóipeáil","Curtha leis an téacs","Cóipeáilte","B'fhéidir nach dtaispeánfar é seo in Minecraft:","Cuir in ionad le","Bain","Luchtaíodh {n} dath","Níor aimsíodh dathanna sa chód sin","Greamaigh cód ar dtús","Déanta: cuir dathanna leis anois","Roghnaithe: cóipeáil le Ctrl+C",
+      "Réaltaí","Croíthe","Saigheada","Comhrac","Corónacha agus céimeanna","Nádúr","Ceol agus spraoi","Stádas","Aghaidheanna agus lámha","Frámaí","Uimhreacha","Barraí","Teanga","Cóipeáil an nasc","Nasc cóipeáilte","Úsáideann gach litir an dath clasaiceach (&0–&f) is cosúla.","Roghnóir datha"]
+  };
+  var IDIOMAS = [["en", "English"], ["es", "Español"], ["fr", "Français"], ["it", "Italiano"], ["zh", "中文"], ["ja", "日本語"], ["ko", "한국어"], ["de", "Deutsch"], ["ar", "العربية"], ["ga", "Gaeilge"]];
+  var lang = (function () {
+    try { var g = localStorage.getItem("cyl-idioma"); if (g && L[g]) return g; } catch (e) {}
+    var n = (navigator.language || "es").slice(0, 2).toLowerCase();
+    return L[n] ? n : "es";
+  })();
+  function T(k, n) { var i = KEYS.indexOf(k), v = (L[lang] || L.es)[i]; if (v == null) v = L.es[i]; return n != null ? v.replace("{n}", n) : v; }
+
+  // ---------- Datos ----------
+  var FORMATOS = [["hex", "&#rrggbb"], ["nick", "/nick &#rrggbb"], ["x", "&x&r&r&g&g&b&b (Essentials)"], ["sec", "§x§r§r§g§g§b§b"],
+    ["llave", "<#rrggbb>"], ["mini", "MiniMessage <gradient>"], ["bb", "[COLOR=#rrggbb]"], ["clasico", "&a &b &c (16)"]];
+  // Los 16 colores de siempre, para servers o plugins que no aceptan HEX
+  var CLASICOS = [["0", "#000000"], ["1", "#0000AA"], ["2", "#00AA00"], ["3", "#00AAAA"], ["4", "#AA0000"], ["5", "#AA00AA"], ["6", "#FFAA00"], ["7", "#AAAAAA"],
+    ["8", "#555555"], ["9", "#5555FF"], ["a", "#55FF55"], ["b", "#55FFFF"], ["c", "#FF5555"], ["d", "#FF55FF"], ["e", "#FFFF55"], ["f", "#FFFFFF"]];
+  var PREAJUSTES = [["-", null], ["Fuego", ["#FF0000", "#FF8A00", "#FFE600"]], ["Océano", ["#0052D4", "#4364F7", "#6FB1FC"]],
+    ["Neón", ["#00F5FF", "#FF2BD6"]], ["Atardecer", ["#FF5F6D", "#FFC371"]], ["Menta", ["#00B09B", "#96C93D"]], ["Pastel", ["#FFC8DD", "#BDE0FE"]],
+    ["Oro", ["#B8860B", "#F5D77A", "#B8860B"]], ["Hielo", ["#E0F7FF", "#7DDFFB", "#3A7BD5"]], ["Cielo", ["#7DDFFB", "#C9A7FF"]],
+    ["Arcoíris", ["#FF0000", "#FF8A00", "#FFE600", "#00D26A", "#00A2FF", "#8A2BE2"]]];
+  var PEQ = "ᴀʙᴄᴅᴇꜰɢʜɪᴊᴋʟᴍɴᴏᴘǫʀꜱᴛᴜᴠᴡxʏᴢ";
+  function rango(up, low, dig, exc) {
+    return function (t) {
+      return Array.from(t).map(function (c) {
+        if (exc && exc[c]) return exc[c];
+        var k = c.charCodeAt(0);
+        if (k >= 65 && k <= 90 && up) return String.fromCodePoint(up + k - 65);
+        if (k >= 97 && k <= 122 && low) return String.fromCodePoint(low + k - 97);
+        if (k >= 48 && k <= 57 && dig) return String.fromCodePoint(dig + k - 48);
+        return c;
+      }).join("");
+    };
+  }
+  var LETRAS = [
+    { mc: true, f: function (t) { return Array.from(t).map(function (c) { var k = c.toLowerCase().charCodeAt(0); return (k >= 97 && k <= 122) ? PEQ[k - 97] : c; }).join(""); } },
+    { f: rango(0x1D400, 0x1D41A, 0x1D7CE) }, { f: rango(0x1D434, 0x1D44E, 0, { h: "ℎ" }) }, { f: rango(0x1D468, 0x1D482, 0) },
+    { f: rango(0x1D5D4, 0x1D5EE, 0x1D7EC) }, { f: rango(0x1D4D0, 0x1D4EA, 0) }, { f: rango(0x1D56C, 0x1D586, 0) },
+    { f: rango(0x1D538, 0x1D552, 0x1D7D8, { C: "ℂ", H: "ℍ", N: "ℕ", P: "ℙ", Q: "ℚ", R: "ℝ", Z: "ℤ" }) }, { f: rango(0x1D670, 0x1D68A, 0x1D7F6) },
+    { mc: true, f: function (t) { return rango(0xFF21, 0xFF41, 0xFF10)(t).replace(/ /g, "　"); } },
+    { mc: true, f: function (t) { return Array.from(t).map(function (c) { var k = c.charCodeAt(0); if (k >= 65 && k <= 90) return String.fromCodePoint(0x24B6 + k - 65); if (k >= 97 && k <= 122) return String.fromCodePoint(0x24D0 + k - 97); if (c === "0") return "⓪"; if (k >= 49 && k <= 57) return String.fromCodePoint(0x2460 + k - 49); return c; }).join(""); } },
+    { f: function (t) { return rango(0x1F130, 0, 0)(t.toUpperCase()); } }, { f: function (t) { return rango(0x1F170, 0, 0)(t.toUpperCase()); } },
+    { mc: true, f: function (t) { var m = "ɐqɔpǝɟƃɥᴉɾʞlɯuodbɹsʇnʌʍxʎz"; return Array.from(t.toLowerCase()).reverse().map(function (c) { var k = c.charCodeAt(0); return (k >= 97 && k <= 122) ? m[k - 97] : c; }).join(""); } },
+    { mc: true, f: function (t) { return "【" + t + "】"; } },
+    { mc: true, f: function (t) { return "✦ " + t + " ✦"; } }
+  ];
+  // Solo caracteres del plano básico de Unicode: Minecraft los dibuja con su letra de respaldo
+  var SIMBOLOS = [
+    ["c_estrellas", "★☆✦✧✩✪✫✬✭✮✯✰✱✲✳✴✵✶✷✸✹✺❂❉❊❋⁂"],
+    ["c_corazones", "❤❥❣♡♥ღ❦❧"],
+    ["c_flechas", "➜➤➢➣➥➦➨➲➳➵➸➺➻➼➽→←↑↓↔↕⇨⇦⇧⇩»«›‹⟶⟵"],
+    ["c_combate", "⚔⚒⛏☠⚡☄⚑⚐⛨⚓☢☣⚖⚗⛓"],
+    ["c_rangos", "♔♕♖♗♘♙♚♛♜♝♞♟⚜✠✟☬☥☯"],
+    ["c_naturaleza", "☀☁☂☃❄❅❆☽☾✿❀❁❃✾☘⚘⛄⛅"],
+    ["c_ocio", "♪♫♬♩☕⚽⚾⛳⌛⏳✉☎✆⌚✈♨"],
+    ["c_estado", "✔✓✘✗✖⚠☑☒☐●○◉◎◆◇■□▪▫▲△▼▽▶◀►◄"],
+    ["c_caras", "☺☻☹✌☝☞☜✍✋✊"],
+    ["c_marcos", "【】「」『』〔〕《》〈〉┃│║━─═▬░▒▓█▌▐┏┓┗┛╔╗╚╝"],
+    ["c_numeros", "①②③④⑤⑥⑦⑧⑨⑩❶❷❸❹❺❻❼❽❾❿➊➋➌"],
+    ["c_barras", ["▰▰▰▱▱", "■■■□□", "▮▮▮▯▯", "███░░", "●●●○○", "▰", "▱", "▮", "▯"]]
+  ];
+  // Emojis que salen como cuadro en Minecraft y su parecido que sí se ve
+  var REEMPLAZOS = { "⭐": "★", "🌟": "✯", "✨": "✧", "💫": "✦", "✅": "✔", "❌": "✘", "❎": "✘", "💀": "☠", "👑": "♛", "🗡️": "⚔", "🗡": "⚔", "🔪": "⚔",
+    "😀": "☺", "😃": "☺", "😄": "☺", "😊": "☺", "🙂": "☺", "😁": "☺", "☺️": "☺", "😢": "☹", "😞": "☹", "🙁": "☹", "😭": "☹", "👉": "☞", "👈": "☜",
+    "🎵": "♪", "🎶": "♫", "💎": "◆", "🔷": "◆", "🔶": "◆", "🟥": "■", "🟩": "■", "🟦": "■", "🟨": "■", "⬛": "■", "⬜": "□", "🔴": "●", "🟢": "●", "🔵": "●", "🟡": "●",
+    "🌙": "☽", "🌸": "✿", "🌼": "❀", "🍀": "☘", "💚": "❤", "💙": "❤", "💜": "❤", "🖤": "❤", "🧡": "❤", "💛": "❤", "🤍": "❤", "💕": "❤", "💖": "❤", "💗": "❤",
+    "📌": "⚑", "🚩": "⚑", "⏰": "⌚", "📞": "☎", "📧": "✉", "📩": "✉", "🏹": "➳" };
+
+  // ---------- Estado ----------
+  var S = { texto: "", colores: ["#7DDFFB", "#C9A7FF"], fijos: [false, false], formato: "hex", vista: "simple", modoSimbolo: "anadir",
+            negrita: true, cursiva: false, subrayado: false, tachado: false };
+  var recientes = leer("cyl-recientes") || [["#FF5F6D", "#FFC371"], ["#00F5FF", "#FF2BD6"], ["#FF0000", "#FF8A00", "#FFE600"]];
+  function leer(k) { try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch (e) { return null; } }
+  function grabar(k, v) { try { localStorage.setItem(k, typeof v === "string" ? v : JSON.stringify(v)); } catch (e) {} }
+
+  // ---------- Utilidades ----------
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function hexRgb(h) { h = h.replace("#", ""); return [0, 2, 4].map(function (i) { return parseInt(h.slice(i, i + 2), 16); }); }
+  function rgbHex(r) { return "#" + r.map(function (v) { return Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, "0"); }).join("").toUpperCase(); }
+  function mezclar(a, b, t) { var x = hexRgb(a), y = hexRgb(b); return rgbHex([0, 1, 2].map(function (k) { return x[k] + (y[k] - x[k]) * t; })); }
+  function hsl(h, s, l) {
+    h = ((h % 360) + 360) % 360; s /= 100; l /= 100;
+    var k = function (n) { return (n + h / 30) % 12; }, a = s * Math.min(l, 1 - l);
+    var f = function (n) { return l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); };
+    return rgbHex([f(0) * 255, f(8) * 255, f(4) * 255]);
+  }
+  function tono(hex) {
+    var r = hexRgb(hex).map(function (v) { return v / 255; }), mx = Math.max.apply(0, r), mn = Math.min.apply(0, r), d = mx - mn;
+    if (!d) return 0;
+    var h = mx === r[0] ? ((r[1] - r[2]) / d) % 6 : mx === r[1] ? (r[2] - r[0]) / d + 2 : (r[0] - r[1]) / d + 4;
+    return h * 60;
+  }
+  function colorEn(st, t) {
+    if (st.length === 1) return st[0];
+    var seg = (st.length - 1) * t, i = Math.min(Math.floor(seg), st.length - 2);
+    return mezclar(st[i], st[i + 1], seg - i);
+  }
+  // El clásico más parecido (el verde pesa más porque es el que más nota el ojo)
+  function clasico(hex) {
+    var r = hexRgb(hex), mejor = CLASICOS[0], min = Infinity;
+    CLASICOS.forEach(function (c) {
+      var q = hexRgb(c[1]), a = r[0] - q[0], b = r[1] - q[1], d = r[2] - q[2], v = 2 * a * a + 4 * b * b + 3 * d * d;
+      if (v < min) { min = v; mejor = c; }
+    });
+    return mejor;
+  }
+  function grad(st) { return st.length === 1 ? st[0] : "linear-gradient(90deg," + st.join(",") + ")"; }
+  function avisar(t) { var a = $("aviso"); a.textContent = t; a.classList.add("ver"); clearTimeout(avisar.t); avisar.t = setTimeout(function () { a.classList.remove("ver"); }, 1600); }
+  function copiar(txt, el, msg) {
+    var falla = function () { if (el && el.select) el.select(); avisar(T("seleccionado")); };
+    try { navigator.clipboard.writeText(txt).then(function () { avisar(msg || T("copiado")); }, falla); } catch (e) { falla(); }
+  }
+
+  // ---------- Aviso de emojis ----------
+  function grafemas(t) {
+    if (window.Intl && Intl.Segmenter) return Array.from(new Intl.Segmenter().segment(t), function (s) { return s.segment; });
+    return Array.from(t);
+  }
+  function malo(g) { return Array.from(g).some(function (c) { var k = c.codePointAt(0); return k > 0xFFFF || k === 0xFE0F || k === 0x200D; }); }
+  function arreglo(g) {
+    if (REEMPLAZOS[g]) return REEMPLAZOS[g];
+    var sin = g.replace(/️/g, "");
+    if (REEMPLAZOS[sin]) return REEMPLAZOS[sin];
+    return sin && !malo(sin) ? sin : null;
+  }
+  function revisar(input, cajaId, alCambiar) {
+    var caja = $(cajaId), vistos = {};
+    var malos = grafemas(input.value).filter(function (g) { if (!malo(g) || vistos[g]) return false; vistos[g] = 1; return true; });
+    caja.hidden = !malos.length;
+    if (!malos.length) return;
+    caja.innerHTML = "<span>⚠ " + esc(T("avisoEmoji")) + "</span>";
+    malos.forEach(function (g) {
+      var r = arreglo(g), b = document.createElement("button"); b.type = "button";
+      b.textContent = r ? g + " → " + r : g + " ✕ " + T("quitar");
+      b.title = r ? T("cambiar") + " " + r : T("quitar");
+      b.onclick = function () { input.value = input.value.split(g).join(r || ""); alCambiar(); };
+      caja.appendChild(b);
+    });
+  }
+
+  // Un color por cada letra que se ve, igual que en Minecraft
+  function pintar() {
+    var chars = Array.from(S.texto || "");
+    var total = chars.filter(function (c) { return c.trim(); }).length, n = 0;
+    return chars.map(function (c) {
+      if (!c.trim()) return { c: c, col: null };
+      var col = colorEn(S.colores, total > 1 ? n / (total - 1) : 0); n++;
+      if (S.formato === "clasico") col = clasico(col)[1];
+      return { c: c, col: col };
+    });
+  }
+
+  // ---------- Código ----------
+  function codigo() {
+    if (!S.texto) return "";
+    var p = pintar(), texto = S.texto, st = S.colores;
+    var est = (S.negrita ? "l" : "") + (S.cursiva ? "o" : "") + (S.subrayado ? "n" : "") + (S.tachado ? "m" : "");
+    function cod(h) {
+      if (S.formato === "clasico") return "&" + clasico(h)[0];
+      var x = h.slice(1).toLowerCase();
+      if (S.formato === "x") return "&x" + x.split("").map(function (c) { return "&" + c; }).join("");
+      if (S.formato === "sec") return "§x" + x.split("").map(function (c) { return "§" + c; }).join("");
+      if (S.formato === "llave") return "<#" + x + ">";
+      return "&#" + x;
+    }
+    var pre = S.formato === "sec" ? "§" : "&";
+    var estilos = est.split("").map(function (c) { return pre + c; }).join("");
+    if (S.formato === "mini") {
+      var a = "", c = "";
+      if (S.negrita) { a += "<b>"; c = "</b>" + c; }
+      if (S.cursiva) { a += "<i>"; c = "</i>" + c; }
+      if (S.subrayado) { a += "<u>"; c = "</u>" + c; }
+      if (S.tachado) { a += "<st>"; c = "</st>" + c; }
+      var lo = st.map(function (h) { return h.toLowerCase(); });
+      return (st.length === 1 ? "<color:" + lo[0] + ">" : "<gradient:" + lo.join(":") + ">") + a + texto + c + (st.length === 1 ? "</color>" : "</gradient>");
+    }
+    if (S.formato === "bb") {
+      var s = st.length === 1 ? "[COLOR=" + st[0] + "]" + texto + "[/COLOR]" : p.map(function (x) { return x.col ? "[COLOR=" + x.col + "]" + x.c + "[/COLOR]" : x.c; }).join("");
+      if (S.negrita) s = "[B]" + s + "[/B]";
+      if (S.cursiva) s = "[I]" + s + "[/I]";
+      if (S.subrayado) s = "[U]" + s + "[/U]";
+      if (S.tachado) s = "[S]" + s + "[/S]";
+      return s;
+    }
+    var out = st.length === 1 ? cod(st[0]) + estilos + texto : p.map(function (x) { return x.col ? cod(x.col) + estilos + x.c : x.c; }).join("");
+    return (S.formato === "nick" ? "/nick " : "") + out;
+  }
+
+  // ---------- Movimiento ----------
+  // Crossfade y elemento compartido con las transiciones de vista del navegador; sin soporte, el cambio es directo.
+  function transicion(fn, pares) {
+    pares = (pares || []).filter(function (p) { return p && p.de; });
+    if (!document.startViewTransition || SIN_MOV.matches) { fn(); return false; }
+    pares.forEach(function (p) { p.de.style.viewTransitionName = p.nombre; });
+    var nuevos = [];
+    var vt = document.startViewTransition(function () {
+      pares.forEach(function (p) { p.de.style.viewTransitionName = ""; });
+      fn();
+      pares.forEach(function (p) { var el = typeof p.a === "string" ? document.querySelector(p.a) : p.a; if (el) { el.style.viewTransitionName = p.nombre; nuevos.push(el); } });
+    });
+    vt.ready.catch(function () {});
+    vt.finished.finally(function () { nuevos.forEach(function (el) { el.style.viewTransitionName = ""; }); });
+    return true;
+  }
+  // El texto gris del campo se escribe letra por letra
+  function escribirPlaceholder(el) {
+    clearTimeout(el._tecleo);
+    var txt = T("placeholder");
+    if (el.value || SIN_MOV.matches) { el.placeholder = txt; return; }
+    var n = 0; el.placeholder = "";
+    var paso = function () { n++; el.placeholder = txt.slice(0, n); if (n < txt.length) el._tecleo = setTimeout(paso, 38); };
+    el._tecleo = setTimeout(paso, 200);
+  }
+  // Stagger: cada elemento entra 0,1 s después del anterior
+  function escalonar(lista) {
+    if (SIN_MOV.matches) return;
+    Array.prototype.forEach.call(lista, function (el, i) {
+      el.classList.remove("entra"); void el.offsetWidth;
+      el.style.setProperty("--i", Math.min(i, 14)); el.classList.add("entra");
+    });
+  }
+  // Linterna: el halo y el borde plateado siguen al cursor o al dedo
+  var apagar = 0;
+  function luz(x, y) {
+    var r = document.documentElement;
+    r.style.setProperty("--x", x + "px"); r.style.setProperty("--y", y + "px"); r.style.setProperty("--on", 1);
+    document.querySelectorAll(".caja, .estilo").forEach(function (c) {
+      var b = c.getBoundingClientRect();
+      if (y < b.top - 260 || y > b.bottom + 260) { c.style.removeProperty("--on"); return; }
+      c.style.setProperty("--lx", (x - b.left) + "px"); c.style.setProperty("--ly", (y - b.top) + "px"); c.style.setProperty("--on", 1);
+    });
+    clearTimeout(apagar);
+  }
+  function luzFuera(espera) {
+    clearTimeout(apagar);
+    apagar = setTimeout(function () {
+      document.documentElement.style.setProperty("--on", 0);
+      document.querySelectorAll(".caja, .estilo").forEach(function (c) { c.style.setProperty("--on", 0); });
+    }, espera);
+  }
+  document.addEventListener("pointermove", function (e) { luz(e.clientX, e.clientY); if (e.pointerType !== "mouse") luzFuera(900); });
+  document.addEventListener("pointerdown", function (e) { luz(e.clientX, e.clientY); if (e.pointerType !== "mouse") luzFuera(900); });
+  document.addEventListener("touchmove", function (e) { var t = e.touches[0]; if (t) { luz(t.clientX, t.clientY); luzFuera(900); } }, { passive: true });
+  document.documentElement.addEventListener("pointerleave", function () { luzFuera(150); });
+  window.addEventListener("blur", function () { luzFuera(0); });
+
+  // Lupa: los iconos de la barra y los símbolos crecen según lo cerca que esté el cursor
+  var lupaActual = null;
+  function lupa(contenedor, items, e, radio) {
+    if (lupaActual && lupaActual !== contenedor) lupaActual.querySelectorAll("[style*='--lupa']").forEach(function (it) { it.style.removeProperty("--lupa"); });
+    lupaActual = contenedor;
+    if (!contenedor) return;
+    items.forEach(function (it) {
+      var r = it.getBoundingClientRect(), dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+      var k = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / radio);
+      if (k > 0) it.style.setProperty("--lupa", (k * k * (3 - 2 * k)).toFixed(3)); else it.style.removeProperty("--lupa");
+    });
+  }
+  document.addEventListener("pointermove", function (e) {
+    if (e.pointerType !== "mouse" || SIN_MOV.matches) return;
+    var t = e.target.closest && e.target.closest("#tabs, .simbolos");
+    if (!t) return lupa(null, [], e, 1);
+    lupa(t, Array.from(t.id === "tabs" ? t.querySelectorAll("button") : t.children), e, t.id === "tabs" ? 130 : 80);
+  });
+
+  // ---------- Vista previa ----------
+  function textoPintado() {
+    if (!S.texto) return '<span class="vacio">' + esc(T("placeholder")) + "</span>";
+    var deco = [S.subrayado ? "underline" : "", S.tachado ? "line-through" : ""].join(" ").trim() || "none";
+    var html = pintar().map(function (x) { return x.col ? '<span style="color:' + x.col + '">' + esc(x.c) + "</span>" : esc(x.c); }).join("");
+    return '<span class="titulo-prev" style="display:inline-block;font-weight:' + (S.negrita ? 700 : 400) + ";font-style:" + (S.cursiva ? "italic" : "normal") + ";text-decoration:" + deco + '">' + html + "</span>";
+  }
+  // Espada de diamante dibujada con formas limpias (punta arriba a la derecha)
+  var ESPADA = '<svg viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(45 20 20)" stroke="#0b332c" stroke-width="1" stroke-linejoin="round">' +
+    '<path d="M20 2.5 23.6 7.5V25H16.4V7.5Z" fill="#2fd3b6"/>' +
+    '<path d="M20 2.5 16.4 7.5V25H20Z" fill="#9ff8ea" stroke="none"/>' +
+    '<path d="M20 2.5 23.6 7.5V25H16.4V7.5Z" fill="none"/>' +
+    '<path d="M20 6.5V23" stroke="#e9fffb" stroke-width=".8" stroke-linecap="round" opacity=".75"/>' +
+    '<rect x="11.5" y="24.6" width="17" height="3.6" rx="1.6" fill="#1f8f7a"/>' +
+    '<rect x="18.3" y="28.2" width="3.4" height="7.4" rx=".8" fill="#6b4a22" stroke="#2e1d08"/>' +
+    '<path d="M18.4 30.4h3.2M18.4 32.6h3.2" stroke="#3d2810" stroke-width=".7"/>' +
+    '<circle cx="20" cy="37" r="2.1" fill="#2fd3b6"/></g></svg>';
+  function escena() {
+    var e = $("escena"), t = textoPintado();
+    e.className = "escena " + (S.vista === "simple" ? "simple" : S.vista === "chat" ? "mundo" : "inv");
+    if (S.vista === "simple") e.innerHTML = "<div>" + t + "</div>";
+    else if (S.vista === "chat") e.innerHTML = '<div class="chat">' +
+      '<div class="gris">Steve: ' + esc(T("chat1")) + "</div>" +
+      "<div>" + t + ' <span class="blanco">Alex</span><span class="gris"> » </span><span class="blanco">' + esc(T("chat2")) + "</span></div>" +
+      '<div class="amarillo">' + esc(T("chat3")) + "</div></div>";
+    else e.innerHTML = '<div class="slot">' + ESPADA + '</div><div class="tooltip">' +
+      '<div class="nombre">' + t + "</div>" +
+      '<div class="gris">' + esc(T("item1")) + "</div><div>&nbsp;</div>" +
+      '<div class="gris">' + esc(T("dano")) + ': <span class="verde">+12</span></div>' +
+      '<div class="amarillo">' + esc(T("item2")) + "</div></div>";
+  }
+  function vista() {
+    escena();
+    var c = codigo();
+    $("codigo").value = c;
+    var largo = Array.from(c).length;
+    $("medida").textContent = T("caracteres", largo) + (largo > 256 ? " · " + T("limite") : "");
+    $("medida").className = "medida" + (largo > 256 ? " pasa" : "");
+    $("tipClasico").hidden = S.formato !== "clasico";
+    revisar($("texto"), "avisoTexto", function () { S.texto = $("texto").value; vista(); });
+    guardarReciente();
+  }
+
+  // ---------- Enlace para compartir ----------
+  function enlace() {
+    var p = ["c=" + S.colores.map(function (h) { return h.slice(1).toLowerCase(); }).join("-")];
+    if (S.texto) p.push("t=" + encodeURIComponent(S.texto));
+    if (S.formato !== "hex") p.push("f=" + S.formato);
+    var e = (S.negrita ? "l" : "") + (S.cursiva ? "o" : "") + (S.subrayado ? "n" : "") + (S.tachado ? "m" : "");
+    p.push("s=" + e);
+    return location.origin + location.pathname + location.search + "#" + p.join("&");
+  }
+  function leerEnlace() {
+    var h = (location.hash || "").replace(/^#/, ""); if (!h) return false;
+    var q = {};
+    h.split("&").forEach(function (par) { var i = par.indexOf("="); if (i > 0) q[par.slice(0, i)] = par.slice(i + 1); });
+    var hubo = false;
+    if (q.c) {
+      var cols = q.c.split("-").filter(function (x) { return /^[0-9a-f]{6}$/i.test(x); }).slice(0, 10)
+        .map(function (x) { return "#" + x.toUpperCase(); });
+      if (cols.length) { S.colores = cols; S.fijos = cols.map(function () { return false; }); hubo = true; }
+    }
+    if (q.t) { try { S.texto = decodeURIComponent(q.t).slice(0, 48); hubo = true; } catch (e) {} }
+    if (q.f && FORMATOS.some(function (f) { return f[0] === q.f; })) { S.formato = q.f; hubo = true; }
+    if (q.s != null) {
+      S.negrita = q.s.indexOf("l") >= 0; S.cursiva = q.s.indexOf("o") >= 0;
+      S.subrayado = q.s.indexOf("n") >= 0; S.tachado = q.s.indexOf("m") >= 0; hubo = true;
+    }
+    return hubo;
+  }
+
+  // Recientes: se guardan solos cuando dejas de mover colores un momento
+  function guardarReciente() {
+    clearTimeout(guardarReciente.t);
+    guardarReciente.t = setTimeout(function () {
+      var clave = S.colores.join(",");
+      if (recientes[0] && recientes[0].join(",") === clave) return;
+      recientes = recientes.filter(function (r) { return r.join(",") !== clave; });
+      recientes.unshift(S.colores.slice()); recientes = recientes.slice(0, 6); grabar("cyl-recientes", recientes); pintarRecientes();
+    }, 1500);
+  }
+  function pintarRecientes() {
+    var c = $("recientes"); c.innerHTML = "";
+    recientes.forEach(function (r) {
+      var b = document.createElement("button"); b.type = "button"; b.className = "reciente"; b.style.background = grad(r);
+      b.title = r.join(" "); b.setAttribute("aria-label", r.join(" "));
+      b.onclick = function () { usarColores(r); };
+      c.appendChild(b);
+    });
+  }
+  function usarColores(lista) {
+    S.colores = lista.slice(); S.fijos = lista.map(function () { return false; });
+    $("preajuste").value = "-"; paleta(); vista();
+  }
+
+  // Cuentagotas: solo donde el navegador lo trae (Chrome y Edge de computadora)
+  function GOTERO(i) {
+    if (!window.EyeDropper) return "";
+    return '<button type="button" class="gotero" aria-label="' + esc(T("cuentagotas")) + " #" + (i + 1) + '" title="' + esc(T("cuentagotas")) + '">' +
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="m18.5 2.5 3 3-3.2 3.2 1.2 1.2-2 2-1.2-1.2L8 18l-4 1 1-4 7.3-7.3-1.2-1.2 2-2 1.2 1.2Z"/></svg></button>';
+  }
+
+  // caen: "todas", un índice, o una lista de índices que entran cayendo con rebote
+  function paleta(caen) {
+    $("cuantos").textContent = S.colores.length;
+    $("menos").disabled = S.colores.length <= 1;
+    $("mas").disabled = S.colores.length >= 10;
+    var c = $("paleta"); c.innerHTML = ""; var n = 0;
+    S.colores.forEach(function (h, i) {
+      var d = document.createElement("div"); d.className = "color" + (S.fijos[i] ? " fijo" : ""); d.draggable = true;
+      if (!SIN_MOV.matches && (caen === "todas" || caen === i || (Array.isArray(caen) && caen.indexOf(i) >= 0))) { d.classList.add("cae"); d.style.setProperty("--i", n++); }
+      d.innerHTML = '<div class="muestra" style="background:' + h + '"><input type="color" id="c' + i + '" value="' + h.toLowerCase() + '" aria-label="#' + (i + 1) + '">' +
+        '<button type="button" class="candado" aria-pressed="' + S.fijos[i] + '" aria-label="🔒 #' + (i + 1) + '">' + (S.fijos[i] ? "🔒" : "🔓") + "</button>" + GOTERO(i) + "</div>" +
+        '<div class="pie"><span>#' + (i + 1) + '</span><input type="text" id="h' + i + '" value="' + h.slice(1).toLowerCase() + '" maxlength="7" spellcheck="false" aria-label="HEX #' + (i + 1) + '"></div>';
+      var gota = d.querySelector(".gotero");
+      if (gota) gota.onclick = function (e) {
+        e.preventDefault();
+        try {
+          new window.EyeDropper().open().then(function (r) {
+            S.colores[i] = String(r.sRGBHex).toUpperCase(); S.fijos[i] = S.fijos[i];
+            $("preajuste").value = "-"; paleta(i); vista();
+          }, function () {});
+        } catch (err) {}
+      };
+      var pick = d.querySelector("input[type=color]"), txt = d.querySelector("input[type=text]"), m = d.querySelector(".muestra");
+      pick.oninput = function () { S.colores[i] = pick.value.toUpperCase(); m.style.background = pick.value; txt.value = pick.value.slice(1); txt.classList.remove("mal"); vista(); };
+      txt.oninput = function () {
+        var v = txt.value.trim().replace("#", "");
+        if (/^[0-9a-fA-F]{6}$/.test(v)) { S.colores[i] = "#" + v.toUpperCase(); pick.value = "#" + v.toLowerCase(); m.style.background = "#" + v; txt.classList.remove("mal"); vista(); }
+        else txt.classList.add("mal");
+      };
+      d.querySelector(".candado").onclick = function (e) { e.preventDefault(); S.fijos[i] = !S.fijos[i]; paleta(); };
+      txt.ondragstart = function (e) { e.preventDefault(); };
+      d.ondragstart = function (e) { d.classList.add("arrastrando"); e.dataTransfer.setData("text/plain", String(i)); e.dataTransfer.effectAllowed = "move"; };
+      d.ondragend = function () { d.classList.remove("arrastrando"); };
+      d.ondragover = function (e) { e.preventDefault(); d.classList.add("sobre"); };
+      d.ondragleave = function () { d.classList.remove("sobre"); };
+      d.ondrop = function (e) {
+        e.preventDefault(); d.classList.remove("sobre");
+        var de = parseInt(e.dataTransfer.getData("text/plain"), 10);
+        if (isNaN(de) || de === i) return;
+        var mc = S.colores.splice(de, 1)[0], mf = S.fijos.splice(de, 1)[0];
+        S.colores.splice(i, 0, mc); S.fijos.splice(i, 0, mf);
+        $("preajuste").value = "-"; paleta(); vista();
+      };
+      c.appendChild(d);
+    });
+  }
+
+  // Aleatorio: elige un tono base y reparte los demás con una regla que suele quedar bien
+  function aleatorio() {
+    var fijo = S.colores.findIndex(function (_, i) { return S.fijos[i]; });
+    var base = fijo >= 0 ? tono(S.colores[fijo]) : Math.random() * 360;
+    var paso = [30, 40, 180, 150, -35][Math.floor(Math.random() * 5)];
+    var sat = 70 + Math.random() * 25, n = S.colores.length, cambiados = [];
+    S.colores = S.colores.map(function (h, i) {
+      if (S.fijos[i]) return h;
+      cambiados.push(i);
+      var t = n > 1 ? i / (n - 1) : 0;
+      return hsl(base + paso * t * (n > 2 ? 1.4 : 1) + (Math.random() * 16 - 8), sat, 58 + Math.random() * 12);
+    });
+    $("preajuste").value = "-"; paleta(cambiados); vista();
+  }
+
+  // Pegar: lee los colores, el texto y el formato de un código que ya tienes
+  function cargarCodigo() {
+    var s = $("pegado").value.trim();
+    if (!s) return avisar(T("pegaPrimero"));
+    var cols = [], m, formato = "hex";
+    var reX = /[&§]x((?:[&§][0-9a-fA-F]){6})/g;
+    if (/[&§]x(?:[&§][0-9a-fA-F]){6}/.test(s)) { formato = s.indexOf("§") >= 0 ? "sec" : "x"; s.replace(reX, function (_, g) { cols.push("#" + g.replace(/[&§]/g, "")); return ""; }); }
+    var reG = /<gradient:([^>]+)>/i.exec(s);
+    if (reG) { formato = "mini"; reG[1].split(":").forEach(function (h) { if (/^#[0-9a-f]{6}$/i.test(h)) cols.push(h); }); }
+    if (!cols.length) {
+      var reH = /#([0-9a-fA-F]{6})/g;
+      while ((m = reH.exec(s))) cols.push("#" + m[1]);
+      if (/\[COLOR=/i.test(s)) formato = "bb"; else if (/<#/.test(s)) formato = "llave"; else if (/<color:/i.test(s)) formato = "mini";
+    }
+    if (!cols.length) {
+      var reC = /[&§]([0-9a-fA-F])/g, cl = [];
+      while ((m = reC.exec(s))) {
+        var cc = CLASICOS.filter(function (x) { return x[0] === m[1].toLowerCase(); })[0];
+        if (cc) cl.push(cc[1]);
+      }
+      if (cl.length) { cols = cl; formato = "clasico"; }
+    }
+    if (!cols.length) return avisar(T("noColores"));
+    if (/^\/nick /.test(s) && formato === "hex") formato = "nick";
+    cols = cols.map(function (h) { return h.toUpperCase(); });
+    // Un código letra por letra trae un color por letra: me quedo con los colores clave
+    if (cols.length > 3) {
+      var mid = cols[Math.floor(cols.length / 2)], ini = cols[0], fin = cols[cols.length - 1];
+      var a = hexRgb(mid), b = hexRgb(mezclar(ini, fin, 0.5));
+      cols = Math.abs(a[0] - b[0]) + Math.abs(a[1] - b[1]) + Math.abs(a[2] - b[2]) < 40 ? [ini, fin] : [ini, mid, fin];
+    }
+    var texto = s.replace(/^\/nick /, "").replace(reX, "").replace(/<[^>]*>/g, "").replace(/\[\/?[^\]]*\]/g, "").replace(/[&§]#[0-9a-fA-F]{6}/g, "").replace(/[&§][0-9a-fk-orA-FK-OR]/g, "");
+    S.negrita = /[&§]l|<b>|<bold>|\[B\]/i.test(s); S.cursiva = /[&§]o|<i>|<italic>|\[I\]/i.test(s);
+    S.subrayado = /[&§]n|<u>|<underlined>|\[U\]/i.test(s); S.tachado = /[&§]m|<st>|<strikethrough>|\[S\]/i.test(s);
+    ["negrita", "cursiva", "subrayado", "tachado"].forEach(function (k) { $(k).checked = S[k]; });
+    if (texto.trim()) { S.texto = texto; $("texto").value = texto; }
+    S.formato = formato; $("formato").value = formato;
+    usarColores(cols);
+    avisar(T("cargados", cols.length));
+  }
+
+  // ---------- Letras ----------
+  function letras(animar) {
+    var t = $("textoLetras").value || T("placeholder").replace("…", ""), c = $("lista"); c.innerHTML = "";
+    revisar($("textoLetras"), "avisoLetras", function () { letras(); });
+    LETRAS.forEach(function (l) {
+      var r = l.f(t);
+      var d = document.createElement("div"); d.className = "estilo";
+      d.innerHTML = '<span class="res"></span><button class="mini" type="button" data-a="colores"></button><button class="mini ok" type="button" data-a="copiar"></button>';
+      var res = d.querySelector(".res"), txt = document.createElement("span"); txt.textContent = r; res.appendChild(txt);
+      if (l.mc) { var tg = document.createElement("span"); tg.className = "tag"; tg.textContent = "Minecraft"; res.appendChild(tg); }
+      d.querySelector('[data-a="colores"]').textContent = T("aColores");
+      d.querySelector('[data-a="copiar"]').textContent = T("copiar");
+      d.querySelector('[data-a="copiar"]').onclick = function () { copiar(r, null); };
+      // Elemento compartido: el texto de la fila viaja hasta la vista previa de Colores
+      d.querySelector('[data-a="colores"]').onclick = function () {
+        S.texto = r; $("texto").value = r; S.vista = "simple";
+        document.querySelectorAll("[data-vista]").forEach(function (x) { x.setAttribute("aria-pressed", x.dataset.vista === "simple"); });
+        transicion(function () { mostrar("colores"); vista(); window.scrollTo(0, 0); }, [{ de: txt, a: "#escena .titulo-prev", nombre: "titulo" }]);
+        avisar(T("listo"));
+      };
+      c.appendChild(d);
+    });
+    if (animar) escalonar(c.children);
+  }
+
+  // ---------- Símbolos ----------
+  function simbolos(animar) {
+    var c = $("categorias"); c.innerHTML = "";
+    SIMBOLOS.forEach(function (cat) {
+      var lista = Array.isArray(cat[1]) ? cat[1] : Array.from(cat[1]);
+      lista = lista.filter(function (s) { return !malo(s); });
+      var d = document.createElement("div"); d.className = "cat";
+      d.innerHTML = "<h3>" + esc(T(cat[0])) + '</h3><div class="simbolos"></div>';
+      var g = d.querySelector(".simbolos");
+      lista.forEach(function (s) {
+        var b = document.createElement("button"); b.type = "button"; b.className = "simbolo" + (Array.from(s).length > 1 ? " largo" : ""); b.textContent = s;
+        b.onclick = function () {
+          if (S.modoSimbolo === "copiar") return copiar(s, null);
+          S.texto = (S.texto || "") + s; $("texto").value = S.texto; vista(); avisar(T("anadido") + ": " + s);
+        };
+        g.appendChild(b);
+      });
+      c.appendChild(d);
+    });
+    if (animar) escalonar(c.children);
+  }
+
+  // ---------- Pestañas (crossfade) ----------
+  var actual = "colores";
+  function mostrar(cual) {
+    ["colores", "letras", "simbolos"].forEach(function (p) {
+      $("tab-" + p).setAttribute("aria-selected", p === cual);
+      $("p-" + p).hidden = p !== cual;
+    });
+    actual = cual;
+  }
+  function pestana(cual) {
+    if (cual === actual) return;
+    var hubo = transicion(function () { mostrar(cual); });
+    if (!hubo && !SIN_MOV.matches) { var p = $("p-" + cual); p.classList.remove("aparece"); void p.offsetWidth; p.classList.add("aparece"); }
+    if (cual === "letras") { escalonar($("lista").children); escribirPlaceholder($("textoLetras")); }
+    if (cual === "simbolos") escalonar($("categorias").children);
+    if (cual === "colores") escribirPlaceholder($("texto"));
+  }
+
+  // ---------- Idioma (morph: el botón se estira hasta ser el menú) ----------
+  var caja = $("idiomaCaja"), boton = $("idiomaBoton");
+  function medirCerrada() {
+    caja.style.width = "auto"; caja.style.height = "auto";
+    var w = boton.offsetWidth + 2;
+    caja.style.width = w + "px"; caja.style.height = "38px";
+    $("idioma").style.width = w + "px";
+  }
+  function abrirIdioma(abrir) {
+    caja.classList.toggle("abierta", abrir);
+    boton.setAttribute("aria-expanded", abrir);
+    if (abrir) { caja.style.width = Math.max(200, boton.offsetWidth + 2) + "px"; caja.style.height = (38 + $("idiomaLista").offsetHeight) + "px"; }
+    else medirCerrada();
+  }
+  boton.onclick = function () { abrirIdioma(!caja.classList.contains("abierta")); };
+  document.addEventListener("click", function (e) { if (caja.classList.contains("abierta") && !caja.contains(e.target)) abrirIdioma(false); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && caja.classList.contains("abierta")) { abrirIdioma(false); boton.focus(); } });
+  IDIOMAS.forEach(function (x, i) {
+    var li = document.createElement("li"), b = document.createElement("button");
+    b.type = "button"; b.setAttribute("role", "menuitem"); b.textContent = x[1]; b.dataset.l = x[0]; b.style.setProperty("--i", i);
+    b.lang = x[0];
+    b.onclick = function () { lang = x[0]; grabar("cyl-idioma", lang); abrirIdioma(false); aplicarIdioma(); };
+    li.appendChild(b); $("idiomaLista").appendChild(li);
+  });
+  // ---------- Tema claro / oscuro ----------
+  var TEMA = { es: ["Modo claro", "Modo oscuro"], en: ["Light mode", "Dark mode"], fr: ["Mode clair", "Mode sombre"], it: ["Modalità chiara", "Modalità scura"], zh: ["浅色模式", "深色模式"],
+    ja: ["ライトモード", "ダークモード"], ko: ["라이트 모드", "다크 모드"], de: ["Heller Modus", "Dunkler Modus"], ar: ["الوضع الفاتح", "الوضع الداكن"], ga: ["Mód geal", "Mód dorcha"] };
+  function claro() { return document.documentElement.dataset.theme === "light"; }
+  function etiquetaTema() { var t = TEMA[lang] || TEMA.en; $("tema").setAttribute("aria-label", claro() ? t[1] : t[0]); $("tema").title = claro() ? t[1] : t[0]; }
+  $("tema").onclick = function () {
+    var cambiar = function () {
+      if (claro()) delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = "light";
+      grabar("cyl-tema", claro() ? "light" : "dark"); etiquetaTema();
+    };
+    if (document.startViewTransition && !matchMedia("(prefers-reduced-motion: reduce)").matches) document.startViewTransition(cambiar); else cambiar();
+  };
+
+  function aplicarIdioma() {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+    document.title = T("title");
+    document.querySelectorAll("[data-t]").forEach(function (el) { el.textContent = T(el.dataset.t); });
+    $("idiomaNombre").textContent = IDIOMAS.find(function (x) { return x[0] === lang; })[1];
+    boton.setAttribute("aria-label", T("idioma")); etiquetaTema();
+    $("preajuste").options[0].textContent = T("ninguna");
+    document.querySelectorAll("#idiomaLista button").forEach(function (b) { b.setAttribute("aria-current", b.dataset.l === lang); });
+    medirCerrada();
+    letras(); simbolos(); vista();
+    escribirPlaceholder($("texto")); escribirPlaceholder($("textoLetras"));
+  }
+
+  // ---------- Controles ----------
+  function llenar(sel, items, val) {
+    sel.innerHTML = items.map(function (x) { return '<option value="' + esc(x[0]) + '"' + (x[0] === val ? " selected" : "") + ">" + esc(x[1]) + "</option>"; }).join("");
+  }
+  if (leerEnlace()) {
+    $("texto").value = S.texto;
+    ["negrita", "cursiva", "subrayado", "tachado"].forEach(function (k) { $(k).checked = S[k]; });
+  }
+  llenar($("formato"), FORMATOS, S.formato);
+  llenar($("preajuste"), PREAJUSTES.map(function (p) { return [p[0], p[0]]; }), "Cielo");
+
+  ["colores", "letras", "simbolos"].forEach(function (p) { $("tab-" + p).onclick = function () { pestana(p); }; });
+  $("textoLetras").oninput = function () { letras(); };
+  document.querySelectorAll("[data-vista]").forEach(function (b) {
+    b.onclick = function () {
+      S.vista = b.dataset.vista;
+      document.querySelectorAll("[data-vista]").forEach(function (x) { x.setAttribute("aria-pressed", x === b); });
+      escena();
+    };
+  });
+  document.querySelectorAll("[data-modo]").forEach(function (b) {
+    b.onclick = function () {
+      S.modoSimbolo = b.dataset.modo;
+      document.querySelectorAll("[data-modo]").forEach(function (x) { x.setAttribute("aria-pressed", x === b); });
+    };
+  });
+  $("texto").oninput = function (e) { S.texto = e.target.value; vista(); };
+  ["negrita", "cursiva", "subrayado", "tachado"].forEach(function (k) { $(k).onchange = function (e) { S[k] = e.target.checked; vista(); }; });
+  $("formato").onchange = function (e) { S.formato = e.target.value; vista(); };
+  $("preajuste").onchange = function (e) {
+    var p = PREAJUSTES.find(function (x) { return x[0] === e.target.value; });
+    if (p && p[1]) { S.colores = p[1].slice(); S.fijos = p[1].map(function () { return false; }); paleta("todas"); vista(); }
+  };
+  $("mas").onclick = function () {
+    S.colores.push(hsl(tono(S.colores[S.colores.length - 1]) + 35, 80, 64)); S.fijos.push(false);
+    $("preajuste").value = "-"; paleta(S.colores.length - 1); vista();
+  };
+  $("menos").onclick = function () { S.colores.pop(); S.fijos.pop(); $("preajuste").value = "-"; paleta(); vista(); };
+  $("dado").onclick = aleatorio;
+  $("invertir").onclick = function () { S.colores.reverse(); S.fijos.reverse(); paleta(); vista(); };
+  $("izq").onclick = function () { S.colores.push(S.colores.shift()); S.fijos.push(S.fijos.shift()); paleta(); vista(); };
+  $("der").onclick = function () { S.colores.unshift(S.colores.pop()); S.fijos.unshift(S.fijos.pop()); paleta(); vista(); };
+  $("compartir").onclick = function () { copiar(enlace(), null, T("enlaceCopiado")); };
+  $("copiar").onclick = function () { if ($("codigo").value) copiar($("codigo").value, $("codigo")); };
+  $("cargar").onclick = cargarCodigo;
+  $("pegado").onkeydown = function (e) { if (e.key === "Enter") cargarCodigo(); };
+
+  paleta("todas"); pintarRecientes(); aplicarIdioma();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(medirCerrada);
+})();
+</script>
+</body>
+</html>
