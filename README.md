@@ -1,16 +1,20 @@
-## Hi there 👋
+# Colores y letras
 
-<!--
-**zAnthxny/zAnthxny** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+Herramienta para crear textos de colores para Minecraft: eliges colores HEX o un degradado, escribes tu texto y copias el código listo para pegar.
 
-Here are some ideas to get you started:
+## Qué tiene
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+- **Colores:** paleta de 1 a 10 colores, aleatorio con candados, recientes, cuentagotas (Chrome y Edge de computadora) y combinaciones listas.
+- **Formatos de salida:** `&#rrggbb`, `/nick`, `&x&r&r&g&g&b&b`, `§x…`, `<#rrggbb>`, MiniMessage `<gradient>`, `[COLOR=]` y los 16 colores clásicos (`&a`, `&b`, `&c`…).
+- **Vista previa:** como texto, en el chat y en un ítem de Minecraft.
+- **Pegar un código:** lee los colores, el texto y el estilo de un código que ya tienes.
+- **Copiar enlace:** comparte tus colores y tu texto con un link.
+- **Letras:** 16 estilos de letra Unicode para copiar.
+- **Símbolos:** símbolos que sí se ven en Minecraft, con aviso para los emojis que no.
+- Tema claro y oscuro, y 10 idiomas.
+
+## Cómo se usa
+
+Es un solo archivo, `index.html`, sin instalar nada. Ábrelo en el navegador o publícalo con GitHub Pages (Settings → Pages → rama `main`, carpeta raíz).
+
+En línea: https://zanthxny.github.io/HEX-Generator/
