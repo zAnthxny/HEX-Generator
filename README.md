@@ -17,4 +17,4 @@ Herramienta para crear textos de colores para Minecraft: eliges colores HEX o un
 
 Es un solo archivo, `index.html`, sin instalar nada. Ábrelo en el navegador o publícalo con GitHub Pages (Settings → Pages → rama `main`, carpeta raíz).
 
-En línea: https://zanthxny.github.io/hexgenerator/
+En línea: https://zanthxny.github.io/HEX-Generator/
