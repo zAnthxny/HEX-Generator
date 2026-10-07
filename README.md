@@ -1,4 +1,4 @@
-# Colores y letras
+# Minecraft HEX Colors
 
 Herramienta para crear textos de colores para Minecraft: eliges colores HEX o un degradado, escribes tu texto y copias el código listo para pegar.
 

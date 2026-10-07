@@ -4,22 +4,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Crea degradados HEX para tu servidor de Minecraft. Varios formatos, letras especiales, símbolos y vista previa en el chat y en un ítem.">
-<title>Colores y letras</title>
+<title>Minecraft HEX Colors</title>
 <!-- Icono de la pestaña -->
-<link rel="icon" type="image/svg+xml" href="icono.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="icono-32.png">
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="avatar-32.png">
+<link rel="icon" type="image/png" sizes="64x64" href="avatar-64.png">
+<link rel="apple-touch-icon" href="avatar-180.png">
 <!-- Vista al compartir el link (Discord, WhatsApp…): la barra de color sale de theme-color -->
 <meta name="theme-color" content="#AAB4FF">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Generador de colores HEX para Minecraft">
-<meta property="og:title" content="Colores y letras">
+<meta property="og:title" content="Minecraft HEX Colors">
 <meta property="og:description" content="Crea degradados HEX para tu servidor de Minecraft. Varios formatos, letras especiales, símbolos y vista previa en el chat y en un ítem.">
 <meta property="og:url" content="https://zanthxny.github.io/HEX-Generator/">
-<meta property="og:image" content="https://zanthxny.github.io/HEX-Generator/icono-512.png">
+<meta property="og:image" content="https://zanthxny.github.io/HEX-Generator/avatar-512.png">
 <meta property="og:image:width" content="512">
 <meta property="og:image:height" content="512">
-<meta property="og:image:alt" content="Paleta de colores">
+<meta property="og:image:alt" content="Minecraft HEX Colors">
 <meta property="og:locale" content="es_ES">
 <meta name="twitter:card" content="summary">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -103,6 +103,7 @@ button { cursor: pointer; }
 
 .top { display: flex; align-items: center; gap: 8px; }
 .top h1 { flex: 1; }
+.logo { width: 38px; height: 38px; flex: none; object-fit: contain; }
 /* Tema: sol (claro) y luna (oscuro) */
 .tema { flex: none; width: 38px; height: 38px; border-radius: 12px; border: 1px solid var(--rule-2); background: var(--raised); display: grid; place-items: center; padding: 0; color: var(--text); overflow: hidden; }
 .tema svg { grid-area: 1 / 1; width: 18px; height: 18px; transition: transform .45s var(--resorte), opacity .25s; }
@@ -163,8 +164,15 @@ h1 { font: 700 22px/1.2 var(--display); margin: 0; min-width: 0; }
 .vistas button[aria-pressed="true"] { color: var(--text); border-bottom-color: var(--accent); font-weight: 700; }
 .escena { border-radius: 12px; overflow: hidden; min-height: 150px; display: flex; color: #fff; font-size: 19px; line-height: 1.35; }
 .escena.simple { background: #1e1f22; align-items: center; justify-content: center; padding: 20px 16px; text-align: center; font-size: 30px; }
-.escena.mundo { position: relative; background: linear-gradient(#5d86c9 0 36%, #4a7a37 36% 44%, #5b3c22 44%); }
-.escena.mundo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(90deg, #00000012 0 16px, transparent 16px 32px), repeating-linear-gradient(0deg, #00000012 0 16px, transparent 16px 32px); }
+/* Chat: un paisaje de Minecraft en pixel art (Overworld de día y de noche, Nether, End) */
+.escena.mundo { position: relative; min-height: 200px; background: #10131a center 62% / cover no-repeat; image-rendering: pixelated; }
+.escena.mundo.cambia { animation: aparecer .35s ease both; }
+.escena.mundo .chat { inset-inline-end: auto; max-width: min(560px, calc(100% - 20px)); text-shadow: 2px 2px 0 rgba(0, 0, 0, .55); }
+.fondo-nav { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 2; display: flex; align-items: center; justify-content: space-between; gap: 8px; pointer-events: none; }
+.fondo-nav button { pointer-events: auto; width: 32px; height: 32px; border: 0; border-radius: 8px; background: rgba(14, 16, 22, .82); color: #fff; display: grid; place-items: center; padding: 0; }
+.fondo-nav button:hover { background: rgba(14, 16, 22, .95); }
+.fondo-nav .der svg { transform: scaleX(-1); }
+.fondo-nombre { background: #fff; color: #1d1f24; border: 2px solid #1d1f24; border-radius: 999px; padding: 1px 12px; font: 600 13px var(--mono); white-space: nowrap; text-shadow: none; }
 .chat { position: absolute; inset-inline: 10px; bottom: 12px; max-width: 600px; background: rgba(0,0,0,.55); padding: 6px 9px; display: flex; flex-direction: column; gap: 2px; z-index: 1; font-size: 17px; }
 .gris { color: #aaa; } .blanco { color: #fff; } .amarillo { color: #ff5; } .verde { color: #5f5; }
 .vacio { color: #777; font-weight: 400; }
@@ -257,7 +265,7 @@ select { width: 100%; background: var(--field); border: 1px solid var(--rule); b
   #aviso { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
   .campos { grid-template-columns: 1fr; }
   .escena.simple { font-size: 24px; }
-  .escena.mundo { min-height: 190px; }
+  .escena.mundo { min-height: 200px; }
   .color { width: 84px; }
   .tooltip { font-size: 15px; }
   h1 { font-size: 18px; }
@@ -273,7 +281,8 @@ select { width: 100%; background: var(--field); border: 1px solid var(--rule); b
 <script>try { if (localStorage.getItem("cyl-tema") === "light") document.documentElement.dataset.theme = "light"; } catch (e) {}</script>
 <div class="wrap">
   <div class="top">
-    <h1 data-t="title">Colores y letras</h1>
+    <img class="logo" src="avatar-96.png" alt="" width="38" height="38">
+    <h1 data-t="title">Minecraft HEX Colors</h1>
     <div class="idioma" id="idioma">
       <div class="idioma-caja" id="idiomaCaja">
         <button type="button" class="idioma-boton" id="idiomaBoton" aria-haspopup="true" aria-expanded="false">
@@ -421,52 +430,52 @@ select { width: 100%; background: var(--field); border: 1px solid var(--rule); b
     "modoCopiar","anadido","copiado","avisoEmoji","cambiar","quitar","cargados","noColores","pegaPrimero","listo","seleccionado",
     "c_estrellas","c_corazones","c_flechas","c_combate","c_rangos","c_naturaleza","c_ocio","c_estado","c_caras","c_marcos","c_numeros","c_barras","idioma","compartir","enlaceCopiado","tipClasico","cuentagotas"];
   var L = {
-    es: ["Colores y letras","Colores","Letras","Símbolos","Código de salida","Copiar código","{n} caracteres","pasa el límite del chat (256)","Texto","Chat","Ítem","Escribe aquí tu texto…",
+    es: ["Minecraft HEX Colors","Colores","Letras","Símbolos","Código de salida","Copiar código","{n} caracteres","pasa el límite del chat (256)","Texto","Chat","Ítem","Escribe aquí tu texto…",
       "Paleta de colores","Aleatorio","Toca un color para cambiarlo, escribe su HEX o arrástralo para reordenar. El 🔓 lo fija para que «Aleatorio» no lo cambie.","Recientes","Estilo","Negrita","Cursiva","Subrayado","Tachado","Invertir","Configuración","Formato","Combinación lista","Ninguna",
       "¿Ya tienes un código? Pégalo y cargo sus colores y su texto:","Cargar","¿alguien para bedwars?","¡Bienvenidos al server!","Notch se unió al juego","Objeto de ejemplo","Daño","Clic derecho para usar","Escribe y copia","Toca «Copiar» en el estilo que quieras. «A Colores» lo pasa a la pestaña de colores.","A Colores","Copiar","Solo símbolos que se deberían ver en Minecraft. Pruébalos en tu server.","Al tocar:","Añadir al texto",
       "Copiar","Añadido al texto","Copiado","Esto puede no verse en Minecraft:","Cambiar por","Quitar","Cargué {n} colores","No encontré colores en ese código","Pega primero un código","Listo: ahora ponle colores","Seleccionado: cópialo con Ctrl+C",
       "Estrellas","Corazones","Flechas","Combate","Coronas y rangos","Naturaleza","Música y ocio","Estado","Caras y manos","Marcos","Números","Barras","Idioma","Copiar enlace","Enlace copiado","Cada letra usa el color clásico (&0–&f) más parecido.","Cuentagotas"],
-    en: ["Colors & Fonts","Colors","Fonts","Symbols","Output code","Copy code","{n} characters","over the chat limit (256)","Text","Chat","Item","Type your text here…",
+    en: ["Minecraft HEX Colors","Colors","Fonts","Symbols","Output code","Copy code","{n} characters","over the chat limit (256)","Text","Chat","Item","Type your text here…",
       "Color palette","Random","Tap a color to change it, type its HEX or drag it to reorder. 🔓 locks it so Random won't change it.","Recent","Style","Bold","Italic","Underline","Strikethrough","Reverse","Settings","Format","Preset","None",
       "Already have a code? Paste it and I'll load its colors and text:","Load","anyone up for bedwars?","Welcome to the server!","Notch joined the game","Example item","Damage","Right-click to use","Type and copy","Tap Copy on the style you want. To Colors sends it to the colors tab.","To Colors","Copy","Only symbols that should show in Minecraft. Test them on your server.","On tap:","Add to text",
       "Copy","Added to text","Copied","This may not show in Minecraft:","Replace with","Remove","Loaded {n} colors","No colors found in that code","Paste a code first","Done: now add colors","Selected: copy it with Ctrl+C",
       "Stars","Hearts","Arrows","Combat","Crowns & ranks","Nature","Music & fun","Status","Faces & hands","Frames","Numbers","Bars","Language","Copy link","Link copied","Each letter uses the closest classic color (&0–&f).","Eyedropper"],
-    fr: ["Couleurs et lettres","Couleurs","Lettres","Symboles","Code de sortie","Copier le code","{n} caractères","dépasse la limite du chat (256)","Texte","Chat","Objet","Écris ton texte ici…",
+    fr: ["Minecraft HEX Colors","Couleurs","Lettres","Symboles","Code de sortie","Copier le code","{n} caractères","dépasse la limite du chat (256)","Texte","Chat","Objet","Écris ton texte ici…",
       "Palette de couleurs","Aléatoire","Touche une couleur pour la changer, écris son HEX ou fais-la glisser pour réordonner. 🔓 la verrouille pour qu'Aléatoire ne la change pas.","Récents","Style","Gras","Italique","Souligné","Barré","Inverser","Réglages","Format","Préréglage","Aucun",
       "Tu as déjà un code ? Colle-le et je charge ses couleurs et son texte :","Charger","quelqu'un pour un bedwars ?","Bienvenue sur le serveur !","Notch a rejoint la partie","Objet d'exemple","Dégâts","Clic droit pour utiliser","Écris et copie","Touche Copier sur le style voulu. Vers Couleurs l'envoie à l'onglet couleurs.","Vers Couleurs","Copier","Seulement des symboles qui devraient s'afficher dans Minecraft. Teste-les sur ton serveur.","Au toucher :","Ajouter au texte",
       "Copier","Ajouté au texte","Copié","Ceci peut ne pas s'afficher dans Minecraft :","Remplacer par","Retirer","{n} couleurs chargées","Aucune couleur trouvée dans ce code","Colle d'abord un code","C'est fait : ajoute des couleurs","Sélectionné : copie-le avec Ctrl+C",
       "Étoiles","Cœurs","Flèches","Combat","Couronnes et rangs","Nature","Musique et loisirs","État","Visages et mains","Cadres","Nombres","Barres","Langue","Copier le lien","Lien copié","Chaque lettre utilise la couleur classique (&0–&f) la plus proche.","Pipette"],
-    it: ["Colori e lettere","Colori","Lettere","Simboli","Codice di uscita","Copia codice","{n} caratteri","supera il limite della chat (256)","Testo","Chat","Oggetto","Scrivi qui il tuo testo…",
+    it: ["Minecraft HEX Colors","Colori","Lettere","Simboli","Codice di uscita","Copia codice","{n} caratteri","supera il limite della chat (256)","Testo","Chat","Oggetto","Scrivi qui il tuo testo…",
       "Tavolozza colori","Casuale","Tocca un colore per cambiarlo, scrivi il suo HEX o trascinalo per riordinare. 🔓 lo blocca così Casuale non lo cambia.","Recenti","Stile","Grassetto","Corsivo","Sottolineato","Barrato","Inverti","Impostazioni","Formato","Combinazione pronta","Nessuna",
       "Hai già un codice? Incollalo e carico i suoi colori e il testo:","Carica","qualcuno per bedwars?","Benvenuti nel server!","Notch è entrato in gioco","Oggetto di esempio","Danno","Clic destro per usare","Scrivi e copia","Tocca Copia sullo stile che vuoi. A Colori lo manda alla scheda colori.","A Colori","Copia","Solo simboli che dovrebbero vedersi in Minecraft. Provali nel tuo server.","Al tocco:","Aggiungi al testo",
       "Copia","Aggiunto al testo","Copiato","Questo potrebbe non vedersi in Minecraft:","Sostituisci con","Rimuovi","Caricati {n} colori","Nessun colore trovato in quel codice","Incolla prima un codice","Fatto: ora aggiungi i colori","Selezionato: copialo con Ctrl+C",
       "Stelle","Cuori","Frecce","Combattimento","Corone e gradi","Natura","Musica e svago","Stato","Facce e mani","Cornici","Numeri","Barre","Lingua","Copia link","Link copiato","Ogni lettera usa il colore classico (&0–&f) più simile.","Contagocce"],
-    zh: ["颜色与字体","颜色","字体","符号","输出代码","复制代码","{n} 个字符","超过聊天上限 (256)","文字","聊天","物品","在这里输入你的文字…",
+    zh: ["Minecraft HEX Colors","颜色","字体","符号","输出代码","复制代码","{n} 个字符","超过聊天上限 (256)","文字","聊天","物品","在这里输入你的文字…",
       "调色板","随机","点击颜色可更改，输入 HEX 或拖动重新排序。🔓 可锁定颜色，随机时不会改变。","最近","样式","粗体","斜体","下划线","删除线","反转","设置","格式","预设","无",
       "已有代码？粘贴后我会读取其中的颜色和文字：","读取","有人玩起床战争吗？","欢迎来到服务器！","Notch 加入了游戏","示例物品","伤害","右键使用","输入并复制","在想要的样式上点“复制”。“到颜色”会把它发送到颜色页。","到颜色","复制","只列出应能在 Minecraft 中显示的符号，请在你的服务器上测试。","点击时：","添加到文字",
       "复制","已添加到文字","已复制","这些可能无法在 Minecraft 中显示：","替换为","删除","已读取 {n} 种颜色","该代码中没有找到颜色","请先粘贴代码","完成：现在添加颜色","已选中：用 Ctrl+C 复制",
       "星星","爱心","箭头","战斗","皇冠与等级","自然","音乐与娱乐","状态","表情与手势","边框","数字","进度条","语言","复制链接","链接已复制","每个字母使用最接近的经典颜色（&0–&f）。","取色器"],
-    ja: ["カラー＆フォント","カラー","フォント","記号","出力コード","コードをコピー","{n} 文字","チャットの上限 (256) を超えています","テキスト","チャット","アイテム","ここにテキストを入力…",
+    ja: ["Minecraft HEX Colors","カラー","フォント","記号","出力コード","コードをコピー","{n} 文字","チャットの上限 (256) を超えています","テキスト","チャット","アイテム","ここにテキストを入力…",
       "カラーパレット","ランダム","色をタップして変更、HEX を入力、ドラッグで並べ替え。🔓 で固定するとランダムで変わりません。","最近","スタイル","太字","斜体","下線","取り消し線","反転","設定","形式","プリセット","なし",
       "コードを持っていますか？貼り付けると色とテキストを読み込みます：","読み込む","誰かベッドウォーズやらない？","サーバーへようこそ！","Notch がゲームに参加しました","サンプルアイテム","攻撃力","右クリックで使用","入力してコピー","使いたいスタイルの「コピー」をタップ。「カラーへ」でカラーのタブに送ります。","カラーへ","コピー","Minecraft で表示されるはずの記号だけです。サーバーで試してください。","タップしたとき：","テキストに追加",
       "コピー","テキストに追加しました","コピーしました","Minecraft で表示されない可能性があります：","置き換え","削除","{n} 色を読み込みました","そのコードに色が見つかりません","先にコードを貼り付けてください","完了：色をつけましょう","選択しました：Ctrl+C でコピー",
       "星","ハート","矢印","戦闘","王冠とランク","自然","音楽と遊び","状態","顔と手","枠","数字","バー","言語","リンクをコピー","リンクをコピーしました","各文字に最も近いクラシックカラー（&0–&f）を使います。","スポイト"],
-    ko: ["색상 & 글꼴","색상","글꼴","기호","출력 코드","코드 복사","{n}자","채팅 제한(256) 초과","텍스트","채팅","아이템","여기에 텍스트를 입력하세요…",
+    ko: ["Minecraft HEX Colors","색상","글꼴","기호","출력 코드","코드 복사","{n}자","채팅 제한(256) 초과","텍스트","채팅","아이템","여기에 텍스트를 입력하세요…",
       "색상 팔레트","무작위","색을 눌러 바꾸고, HEX를 입력하거나 끌어서 순서를 바꾸세요. 🔓로 고정하면 무작위로 바뀌지 않아요.","최근","스타일","굵게","기울임","밑줄","취소선","뒤집기","설정","형식","프리셋","없음",
       "이미 코드가 있나요? 붙여넣으면 색과 텍스트를 불러올게요:","불러오기","배드워즈 할 사람?","서버에 오신 걸 환영해요!","Notch님이 게임에 참여했습니다","예시 아이템","공격력","우클릭으로 사용","입력하고 복사","원하는 스타일의 '복사'를 누르세요. '색상으로'는 색상 탭으로 보냅니다.","색상으로","복사","Minecraft에서 보일 기호만 모았어요. 서버에서 확인해 보세요.","누르면:","텍스트에 추가",
       "복사","텍스트에 추가됨","복사됨","Minecraft에서 안 보일 수 있어요:","바꾸기","삭제","색 {n}개를 불러왔어요","그 코드에서 색을 찾지 못했어요","먼저 코드를 붙여넣으세요","완료: 이제 색을 입히세요","선택됨: Ctrl+C로 복사하세요",
       "별","하트","화살표","전투","왕관과 등급","자연","음악과 놀이","상태","얼굴과 손","테두리","숫자","막대","언어","링크 복사","링크 복사됨","각 글자에 가장 가까운 클래식 색(&0–&f)을 사용해요.","스포이트"],
-    de: ["Farben & Schriften","Farben","Schriften","Symbole","Ausgabecode","Code kopieren","{n} Zeichen","über dem Chat-Limit (256)","Text","Chat","Item","Schreib hier deinen Text…",
+    de: ["Minecraft HEX Colors","Farben","Schriften","Symbole","Ausgabecode","Code kopieren","{n} Zeichen","über dem Chat-Limit (256)","Text","Chat","Item","Schreib hier deinen Text…",
       "Farbpalette","Zufall","Tippe auf eine Farbe, um sie zu ändern, gib ihren HEX ein oder zieh sie zum Sortieren. 🔓 sperrt sie, damit Zufall sie nicht ändert.","Zuletzt","Stil","Fett","Kursiv","Unterstrichen","Durchgestrichen","Umkehren","Einstellungen","Format","Vorlage","Keine",
       "Hast du schon einen Code? Füg ihn ein und ich lade Farben und Text:","Laden","wer spielt bedwars?","Willkommen auf dem Server!","Notch hat das Spiel betreten","Beispiel-Item","Schaden","Rechtsklick zum Benutzen","Schreiben und kopieren","Tippe bei deinem Stil auf Kopieren. Zu Farben schickt ihn zum Farben-Tab.","Zu Farben","Kopieren","Nur Symbole, die in Minecraft angezeigt werden sollten. Teste sie auf deinem Server.","Beim Tippen:","Zum Text hinzufügen",
       "Kopieren","Zum Text hinzugefügt","Kopiert","Das wird in Minecraft evtl. nicht angezeigt:","Ersetzen durch","Entfernen","{n} Farben geladen","Keine Farben in diesem Code gefunden","Füg zuerst einen Code ein","Fertig: jetzt Farben hinzufügen","Markiert: kopier es mit Strg+C",
       "Sterne","Herzen","Pfeile","Kampf","Kronen & Ränge","Natur","Musik & Spaß","Status","Gesichter & Hände","Rahmen","Zahlen","Balken","Sprache","Link kopieren","Link kopiert","Jeder Buchstabe nutzt die ähnlichste klassische Farbe (&0–&f).","Pipette"],
-    ar: ["الألوان والخطوط","الألوان","الخطوط","الرموز","كود الإخراج","نسخ الكود","{n} حرفًا","يتجاوز حد الدردشة (256)","نص","دردشة","عنصر","اكتب نصك هنا…",
+    ar: ["Minecraft HEX Colors","الألوان","الخطوط","الرموز","كود الإخراج","نسخ الكود","{n} حرفًا","يتجاوز حد الدردشة (256)","نص","دردشة","عنصر","اكتب نصك هنا…",
       "لوحة الألوان","عشوائي","اضغط على لون لتغييره، أو اكتب رمز HEX، أو اسحبه لإعادة الترتيب. 🔓 يثبّته حتى لا يغيّره «عشوائي».","الأخيرة","النمط","عريض","مائل","تسطير","يتوسطه خط","عكس","الإعدادات","الصيغة","مجموعة جاهزة","لا شيء",
       "لديك كود بالفعل؟ الصقه وسأحمّل ألوانه ونصه:","تحميل","من يلعب بيدوورز؟","أهلًا بكم في السيرفر!","انضم Notch إلى اللعبة","عنصر تجريبي","الضرر","انقر بالزر الأيمن للاستخدام","اكتب وانسخ","اضغط «نسخ» على النمط الذي تريده. «إلى الألوان» يرسله إلى تبويب الألوان.","إلى الألوان","نسخ","رموز يُفترض أن تظهر في ماينكرافت فقط. جرّبها في سيرفرك.","عند الضغط:","إضافة إلى النص",
       "نسخ","أُضيف إلى النص","تم النسخ","قد لا يظهر هذا في ماينكرافت:","استبدال بـ","حذف","تم تحميل {n} ألوان","لم أجد ألوانًا في هذا الكود","الصق كودًا أولًا","تم: أضف الألوان الآن","تم التحديد: انسخه بـ Ctrl+C",
       "نجوم","قلوب","أسهم","قتال","تيجان ورتب","طبيعة","موسيقى وتسلية","الحالة","وجوه وأيدٍ","إطارات","أرقام","أشرطة","اللغة","نسخ الرابط","تم نسخ الرابط","كل حرف يستخدم أقرب لون كلاسيكي (&0–&f).","قطّارة الألوان"],
-    ga: ["Dathanna agus Clónna","Dathanna","Clónna","Siombailí","Cód aschuir","Cóipeáil an cód","{n} carachtar","thar theorainn an chomhrá (256)","Téacs","Comhrá","Earra","Scríobh do théacs anseo…",
+    ga: ["Minecraft HEX Colors","Dathanna","Clónna","Siombailí","Cód aschuir","Cóipeáil an cód","{n} carachtar","thar theorainn an chomhrá (256)","Téacs","Comhrá","Earra","Scríobh do théacs anseo…",
       "Pailéad dathanna","Randamach","Tapáil dath chun é a athrú, scríobh a HEX nó tarraing é chun an t-ord a athrú. Glasálann 🔓 é ionas nach n-athróidh Randamach é.","Le déanaí","Stíl","Trom","Iodálach","Folínithe","Líne tríd","Aisiompaigh","Socruithe","Formáid","Réamhshocrú","Dada",
       "An bhfuil cód agat cheana? Greamaigh é agus luchtóidh mé a dhathanna agus a théacs:","Luchtaigh","aon duine le haghaidh bedwars?","Fáilte go dtí an freastalaí!","Tháinig Notch isteach sa chluiche","Earra samplach","Damáiste","Deaschliceáil chun é a úsáid","Scríobh agus cóipeáil","Tapáil Cóipeáil ar an stíl is mian leat. Seolann Chuig Dathanna é chuig an táb dathanna.","Chuig Dathanna","Cóipeáil","Siombailí ba chóir a bheith le feiceáil in Minecraft amháin. Tástáil ar do fhreastalaí iad.","Ar thapáil:","Cuir leis an téacs",
       "Cóipeáil","Curtha leis an téacs","Cóipeáilte","B'fhéidir nach dtaispeánfar é seo in Minecraft:","Cuir in ionad le","Bain","Luchtaíodh {n} dath","Níor aimsíodh dathanna sa chód sin","Greamaigh cód ar dtús","Déanta: cuir dathanna leis anois","Roghnaithe: cóipeáil le Ctrl+C",
@@ -751,11 +760,131 @@ select { width: 100%; background: var(--field); border: 1px solid var(--rule); b
     '<rect x="18.3" y="28.2" width="3.4" height="7.4" rx=".8" fill="#6b4a22" stroke="#2e1d08"/>' +
     '<path d="M18.4 30.4h3.2M18.4 32.6h3.2" stroke="#3d2810" stroke-width=".7"/>' +
     '<circle cx="20" cy="37" r="2.1" fill="#2fd3b6"/></g></svg>';
+  // ---------- Fondos de Minecraft (pixel art dibujado aquí mismo, sin imágenes) ----------
+  var FONDOS = [["dia", "Overworld ☀"], ["noche", "Overworld ☾"], ["nether", "Nether 🔥"], ["end", "The End ✦"]];
+  var fondoCache = {};
+  function dibujarFondo(cual) {
+    if (fondoCache[cual]) return fondoCache[cual];
+    var W = 320, H = 100, B = 8, cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    var g = cv.getContext("2d"), semilla = { dia: 7, noche: 7, nether: 21, end: 33 }[cual];
+    var azar = function () { semilla = (semilla + 0x6D2B79F5) | 0; var t = Math.imul(semilla ^ (semilla >>> 15), 1 | semilla); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    var px = function (x, y, w, h, c) { g.fillStyle = c; g.fillRect(x, y, w, h); };
+    var cerca = function (lista) { return lista[Math.floor(azar() * lista.length)]; };
+    // Bloque de 8×8 con textura de puntitos
+    var bloque = function (x, y, base, motas, n) { px(x, y, B, B, base); for (var i = 0; i < (n || 9); i++) px(x + Math.floor(azar() * B), y + Math.floor(azar() * B), 1, 1, cerca(motas)); };
+    var cielo = function (arriba, abajo, hasta) {
+      var a = hexRgb(arriba), b = hexRgb(abajo), pasos = Math.ceil(hasta / 6);
+      for (var i = 0; i < pasos; i++) { var t = i / Math.max(1, pasos - 1); px(0, i * 6, W, 6, rgbHex([0, 1, 2].map(function (k) { return a[k] + (b[k] - a[k]) * t; }))); }
+    };
+    var cols = W / B, alto = [], h = 9;
+    for (var c = 0; c < cols; c++) { if (azar() < .35) h += azar() < .5 ? -1 : 1; h = Math.max(8, Math.min(9, h)); alto.push(h); }
+    var noche = cual === "noche";
+
+    if (cual === "dia" || noche) {
+      cielo(noche ? "#070B1E" : "#5E92F2", noche ? "#1C2A55" : "#B9D6FF", 64);
+      if (!noche) {
+        px(252, 12, 20, 20, "#FFF7C2"); px(255, 15, 14, 14, "#FFE76A");
+        for (var n = 0; n < 7; n++) {
+          var cx = Math.floor(azar() * (W + 40)) - 20, cy = 6 + Math.floor(azar() * 18), largo = 3 + Math.floor(azar() * 5);
+          for (var k = 0; k < largo; k++) { px(cx + k * 6, cy, 6, 4, "#FFFFFF"); if (azar() < .6) px(cx + k * 6 + 2, cy - 3, 6, 3, "#F2F6FF"); }
+        }
+      }
+      // Colinas lejanas
+      var lejos = noche ? "#1E3326" : "#7FAE6A", lejos2 = noche ? "#18291F" : "#6C9C58";
+      for (var x = 0, hh = 50; x < W; x += 6) { hh += Math.floor(azar() * 7) - 3; hh = Math.max(42, Math.min(56, hh)); px(x, hh, 6, H - hh, lejos); px(x, hh + 6, 6, H, lejos2); }
+      for (c = 0; c < cols; c++) {
+        var y0 = alto[c] * B;
+        bloque(c * B, y0, "#5DA63F", ["#4E9234", "#6CB84B", "#579E3B"], 14);
+        for (var d = 1; d * B + y0 < H; d++) bloque(c * B, y0 + d * B, d < 3 ? "#866043" : "#7B7B7B", d < 3 ? ["#6B4B32", "#9A7150", "#795538"] : ["#6A6A6A", "#8E8E8E"], 10);
+        for (var q = 0; q < B; q++) if (azar() < .55) px(c * B + q, y0 + B, 1, 1 + Math.floor(azar() * 3), "#5DA63F");
+        // Hierba alta y flores
+        if (azar() < .3) { px(c * B + 3, y0 - 4, 1, 4, "#4E9234"); px(c * B + 5, y0 - 3, 1, 3, "#6CB84B"); }
+        else if (azar() < .12) { px(c * B + 4, y0 - 3, 1, 3, "#3E7A2A"); px(c * B + 3, y0 - 5, 3, 2, azar() < .5 ? "#E23B3B" : "#F4D33A"); }
+      }
+      // Árboles
+      [5, 17, 31].forEach(function (c) {
+        var y0 = alto[c] * B, tx = c * B;
+        for (var t = 1; t <= 3; t++) { px(tx, y0 - t * B, B, B, "#6B5134"); px(tx + 2, y0 - t * B, 1, B, "#56412A"); px(tx + 5, y0 - t * B + 2, 1, 5, "#56412A"); }
+        for (var fy = 0; fy < 3; fy++) for (var fx = -2; fx <= 2; fx++) {
+          if ((fy === 0 && Math.abs(fx) === 2)) continue;
+          bloque(tx + fx * B, y0 - (5 - fy) * B, "#3B7A26", ["#2E641D", "#4A8F31", "#336E21"], 16);
+        }
+      });
+      if (noche) {
+        g.fillStyle = "rgba(8,12,34,.55)"; g.fillRect(0, 0, W, H);
+        for (var s = 0; s < 60; s++) { var sx = Math.floor(azar() * W), sy = Math.floor(azar() * 40); if (sy < 24 || azar() < .3) px(sx, sy, 1, 1, azar() < .3 ? "#FFFFFF" : "#9FB0D8"); }
+        px(254, 12, 16, 16, "#E9EEF6"); px(257, 16, 3, 3, "#C7CFDB"); px(263, 21, 4, 3, "#C7CFDB"); px(260, 24, 2, 2, "#C7CFDB");
+      }
+    }
+
+    if (cual === "nether") {
+      cielo("#1C0505", "#5C1710", H);
+      for (var p = 0; p < 40; p++) px(Math.floor(azar() * W), 18 + Math.floor(azar() * 50), 1, 1, "#8A2A1A");
+      // Techo de netherrack con piedra luminosa
+      for (c = 0; c < cols; c++) {
+        var t0 = 1 + Math.floor(azar() * 2);
+        for (var r = 0; r < t0; r++) bloque(c * B, r * B, "#6E2B2B", ["#5A2020", "#843636", "#4E1B1B"], 12);
+        if (azar() < .22) bloque(c * B, t0 * B, "#E9B65A", ["#FFE08A", "#B98432", "#F7CF73"], 16);
+      }
+      for (c = 0; c < cols; c++) {
+        var y1 = alto[c] * B, lava = c >= 14 && c <= 22;
+        if (lava) {
+          var ly = 10 * B;
+          px(c * B, ly, B, H - ly, "#D9531E");
+          for (var l = 0; l < 10; l++) px(c * B + Math.floor(azar() * B), ly + Math.floor(azar() * (H - ly)), 2, 1, cerca(["#FF9A2E", "#F7C64B", "#B8401A"]));
+          px(c * B, ly, B, 1, "#FFB347");
+          continue;
+        }
+        for (d = 0; d * B + y1 < H; d++) bloque(c * B, y1 + d * B, "#6E2B2B", ["#5A2020", "#843636", "#4E1B1B"], 12);
+        if (azar() < .15) { px(c * B + 3, y1 - 4, 2, 4, "#A0262B"); px(c * B + 1, y1 - 6, 6, 2, "#C3313A"); }
+      }
+      // Brillo de la lava
+      var brillo = g.createRadialGradient(144, 84, 4, 144, 84, 110);
+      brillo.addColorStop(0, "rgba(255,140,40,.35)"); brillo.addColorStop(1, "rgba(255,140,40,0)");
+      g.fillStyle = brillo; g.fillRect(0, 0, W, H);
+    }
+
+    if (cual === "end") {
+      cielo("#08050F", "#1E1230", H);
+      for (s = 0; s < 60; s++) px(Math.floor(azar() * W), Math.floor(azar() * 70), 1, 1, cerca(["#B9A3E3", "#6E5A9A", "#FFFFFF"]));
+      // Pilares de obsidiana con cristal arriba
+      [[40, 22], [112, 34], [196, 16], [270, 28]].forEach(function (pi) {
+        var x = pi[0], top = pi[1];
+        px(x, top, 16, H - top, "#140F20");
+        for (var v = top; v < H; v += 4) { px(x + Math.floor(azar() * 14), v, 2, 1, "#3B2A5C"); px(x + Math.floor(azar() * 14), v + 2, 1, 1, "#2A1E42"); }
+        px(x + 4, top - 9, 8, 8, "#E7A6FF"); px(x + 6, top - 7, 4, 4, "#FFFFFF");
+        g.fillStyle = "rgba(231,166,255,.18)"; g.fillRect(x - 2, top - 12, 20, 14);
+      });
+      for (c = 0; c < cols; c++) {
+        var y2 = (alto[c] + 1) * B;
+        for (d = 0; d * B + y2 < H; d++) bloque(c * B, y2 + d * B, "#DCDFA0", ["#C5C98A", "#E9ECB8", "#BFC283"], 12);
+      }
+    }
+
+    fondoCache[cual] = cv.toDataURL();
+    return fondoCache[cual];
+  }
+  var FLECHA = '<svg viewBox="0 0 8 8" width="14" height="14" shape-rendering="crispEdges" aria-hidden="true"><path d="M5 1h1v1H5zM4 2h1v1H4zM3 3h1v2H3zM4 5h1v1H4zM5 6h1v1H5z" fill="currentColor" transform="scale(1.1) translate(-.6 -.4)"/></svg>';
+  S.fondo = (function () { var f = parseInt(leer("cyl-fondo"), 10); return f >= 0 && f < FONDOS.length ? f : 0; })();
+  $("escena").addEventListener("click", function (ev) {
+    var b = ev.target.closest("[data-fondo]"); if (!b) return;
+    S.fondo = (S.fondo + parseInt(b.dataset.fondo, 10) + FONDOS.length) % FONDOS.length;
+    grabar("cyl-fondo", String(S.fondo));
+    var e = $("escena"); e.classList.remove("cambia"); void e.offsetWidth; escena(); e.classList.add("cambia");
+  });
+
   function escena() {
     var e = $("escena"), t = textoPintado();
-    e.className = "escena " + (S.vista === "simple" ? "simple" : S.vista === "chat" ? "mundo" : "inv");
+    var cambia = e.classList.contains("cambia");
+    e.className = "escena " + (S.vista === "simple" ? "simple" : S.vista === "chat" ? "mundo" : "inv") + (cambia && S.vista === "chat" ? " cambia" : "");
+    e.style.backgroundImage = S.vista === "chat" ? "url(" + dibujarFondo(FONDOS[S.fondo][0]) + ")" : "";
     if (S.vista === "simple") e.innerHTML = "<div>" + t + "</div>";
-    else if (S.vista === "chat") e.innerHTML = '<div class="chat">' +
+    else if (S.vista === "chat") e.innerHTML = '<div class="fondo-nav">' +
+      '<button type="button" data-fondo="-1" aria-label="◀">' + FLECHA + '</button>' +
+      '<span class="fondo-nombre">' + esc(FONDOS[S.fondo][1]) + '</span>' +
+      '<button type="button" class="der" data-fondo="1" aria-label="▶">' + FLECHA + '</button></div>' +
+      '<div class="chat">' +
       '<div class="gris">Steve: ' + esc(T("chat1")) + "</div>" +
       "<div>" + t + ' <span class="blanco">Alex</span><span class="gris"> » </span><span class="blanco">' + esc(T("chat2")) + "</span></div>" +
       '<div class="amarillo">' + esc(T("chat3")) + "</div></div>";
