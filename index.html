@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="avatar-64.png">
 <link rel="apple-touch-icon" href="avatar-180.png">
 <!-- Vista al compartir el link (Discord, WhatsApp…): la barra de color sale de theme-color -->
-<meta name="theme-color" content="#AAB4FF">
+<meta name="theme-color" content="#4FE3F0">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Generador de colores HEX para Minecraft">
 <meta property="og:title" content="Minecraft HEX Colors">
@@ -26,35 +26,36 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: una sola columna con tres pestañas (Colores / Letras / Símbolos). En el celular las pestañas
-   son una barra flotante abajo, con icono y nombre. Gris medio con una "linterna" plateada que sigue al dedo o al cursor.
+/* Colores: azul diamante (#0A1A3F) con acento cian; el modo claro es un azul muy suave.
+   Layout: una sola columna con tres pestañas (Colores / Letras / Símbolos). En el celular las pestañas
+   son una barra flotante abajo, con icono y nombre. Una "linterna" plateada que sigue al dedo o al cursor.
    Dos temas: oscuro (por defecto) y claro, con el botón de sol y luna junto a los idiomas. */
 :root {
   color-scheme: dark;
-  --ink: #26282d;
-  --deck: #303238;
-  --raised: #3c3f46;
-  --field: #212327;
-  --rule: #42454d;
-  --rule-2: #555962;
+  --ink: #0a1a3f;
+  --deck: #102552;
+  --raised: #183166;
+  --field: #081533;
+  --rule: #213c80;
+  --rule-2: #2d4e9c;
   --text: #f4f5f7;
-  --muted: #c9ccd3;
-  --dim: #9da1ab;
-  --accent: #aab4ff;
-  --accent-ink: #1c2040;
-  --accent-suave: #aab4ff22;
+  --muted: #c6d3f0;
+  --dim: #90a4d0;
+  --accent: #4fe3f0;
+  --accent-ink: #04252b;
+  --accent-suave: #4fe3f022;
   --hover: #ffffff14;
   --sombra: #00000070;
-  --holder: #7f848e;
+  --holder: #7189bd;
   --silver: 236, 239, 245;
   --luz: 1;
   --warn: #ffd27a;
   /* Vidrio líquido de la barra */
-  --vidrio: rgba(44, 46, 52, .72);
+  --vidrio: rgba(14, 34, 80, .72);
   --vidrio-borde: rgba(255, 255, 255, .16);
   --vidrio-brillo: rgba(255, 255, 255, .28);
   --vidrio-activo: rgba(255, 255, 255, .11);
-  --tab-texto: #a6aab3;
+  --tab-texto: #9db2de;
   --display: "Unbounded", "Arial Black", system-ui, sans-serif;
   --sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -64,29 +65,29 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --ink: #e6e8ec;
-  --deck: #f5f6f8;
+  --ink: #e3ecfa;
+  --deck: #f4f8fe;
   --raised: #ffffff;
-  --field: #eceef1;
-  --rule: #d4d7de;
-  --rule-2: #c0c4cd;
-  --text: #1c1e23;
-  --muted: #474b54;
-  --dim: #6a6f79;
-  --accent: #4b57d1;
+  --field: #e8f0fb;
+  --rule: #c9d7ee;
+  --rule-2: #b3c5e4;
+  --text: #0f1c3a;
+  --muted: #3a4a6b;
+  --dim: #5d6e91;
+  --accent: #1877d6;
   --accent-ink: #ffffff;
-  --accent-suave: #4b57d11c;
+  --accent-suave: #1877d61c;
   --hover: #0000000d;
   --sombra: #0000002e;
-  --holder: #8b9099;
-  --silver: 120, 130, 155;
+  --holder: #8494b4;
+  --silver: 70, 110, 180;
   --luz: .8;
   --warn: #9a6400;
-  --vidrio: rgba(250, 251, 253, .72);
+  --vidrio: rgba(244, 248, 254, .72);
   --vidrio-borde: rgba(255, 255, 255, .75);
   --vidrio-brillo: rgba(255, 255, 255, .9);
   --vidrio-activo: rgba(255, 255, 255, .7);
-  --tab-texto: #5b606a;
+  --tab-texto: #52648a;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -127,15 +128,11 @@ h1 { font: 700 22px/1.2 var(--display); margin: 0; min-width: 0; }
 .idioma-lista button[aria-current="true"] { color: var(--accent); font-weight: 700; }
 
 /* ---- Pestañas (barra con icono y nombre) ---- */
-/* Vidrio líquido: fondo translúcido que desenfoca y satura lo de atrás, con brillo en el borde de arriba */
-.tabs { align-self: center; position: relative; isolation: isolate; display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--vidrio); border: 1px solid var(--vidrio-borde);
-  backdrop-filter: blur(22px) saturate(180%); -webkit-backdrop-filter: blur(22px) saturate(180%);
-  box-shadow: inset 0 1px 0 var(--vidrio-brillo), inset 0 -1px 1px rgba(255,255,255,.05), 0 10px 28px var(--sombra); }
-.tabs::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
-  background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0) 55%), radial-gradient(120% 90% at 50% 120%, rgba(255,255,255,.08), transparent 60%); }
-.tabs button { display: flex; flex-direction: column; align-items: center; gap: 1px; min-width: 76px; border: 0; border-radius: 999px; background: transparent; padding: 5px 12px 4px; color: var(--tab-texto); font-size: 11.5px; font-weight: 500; transition: background .25s, color .2s, box-shadow .25s; }
-.tabs button svg { width: 21px; height: 21px; transform: scale(calc(1 + var(--lupa, 0) * .45)) translateY(calc(var(--lupa, 0) * -3px)); transition: transform .12s ease-out; }
-.tabs button[aria-selected="true"] { color: var(--accent); background: var(--vidrio-activo); box-shadow: inset 0 1px 0 var(--vidrio-brillo), 0 1px 4px rgba(0,0,0,.12); }
+/* PC: una tarjeta del mismo ancho que las demás, con las tres pestañas repartidas */
+.tabs { position: relative; isolation: isolate; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 6px; border-radius: 16px; background: var(--deck); border: 1px solid var(--rule); }
+.tabs button { display: flex; flex-direction: column; align-items: center; gap: 3px; border: 0; border-radius: 11px; background: transparent; padding: 8px 12px 7px; color: var(--tab-texto); font-size: 13px; font-weight: 500; transition: background .25s, color .2s, box-shadow .25s; }
+.tabs button svg { width: 23px; height: 23px; transform: scale(calc(1 + var(--lupa, 0) * .45)) translateY(calc(var(--lupa, 0) * -3px)); transition: transform .12s ease-out; }
+.tabs button[aria-selected="true"] { color: var(--accent); background: var(--accent-suave); box-shadow: inset 0 0 0 1px var(--accent-suave); }
 .tabs button:hover { color: var(--text); }
 .tabs button[aria-selected="true"]:hover { color: var(--accent); }
 .panel { display: flex; flex-direction: column; gap: 14px; }
@@ -192,20 +189,22 @@ h1 { font: 700 22px/1.2 var(--display); margin: 0; min-width: 0; }
 .contador b { font: 700 22px var(--mono); min-width: 2ch; text-align: center; }
 .dado { border: 1px solid var(--accent); background: var(--accent-suave); color: var(--text); border-radius: 12px; padding: 8px 20px; font-weight: 700; }
 .paleta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-.color { width: 92px; border: 1px solid var(--rule-2); border-radius: 12px; background: var(--field); padding: 6px; display: flex; flex-direction: column; gap: 6px; cursor: grab; }
+/* Tarjetas grandes: la muestra entera se toca para elegir el color; candado y cuentagotas van abajo, aparte */
+.color { width: 128px; border: 1px solid var(--rule-2); border-radius: 14px; background: var(--field); padding: 8px; display: flex; flex-direction: column; gap: 8px; cursor: grab; }
 .color.fijo { border-color: var(--warn); }
 .color.arrastrando { opacity: .4; }
 .color.sobre { border-color: var(--accent); }
 /* Spring: la tarjeta cae, se pasa un poquito de su lugar y vuelve */
 .color.cae { animation: caer .8s var(--resorte) both; animation-delay: calc(var(--i, 0) * 70ms); }
 @keyframes caer { from { opacity: 0; transform: translateY(-38px); } 30% { opacity: 1; } }
-.muestra { position: relative; height: 40px; border-radius: 7px; overflow: hidden; }
+.muestra { position: relative; height: 72px; border-radius: 9px; overflow: hidden; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
 .muestra input { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); border: 0; padding: 0; cursor: pointer; opacity: 0; }
-.candado { position: absolute; right: 3px; top: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 6px; border: 0; background: #000000a0; font-size: 12px; line-height: 22px; padding: 0; }
-.gotero { position: absolute; left: 3px; top: 3px; z-index: 2; width: 22px; height: 22px; border-radius: 6px; border: 0; background: #000000a0; color: #fff; padding: 0; display: grid; place-items: center; }
-.gotero svg { width: 13px; height: 13px; }
-.color .pie { display: flex; justify-content: space-between; font: 11px var(--mono); color: var(--dim); direction: ltr; }
-.color .pie input { width: 7.5ch; background: transparent; border: 0; padding: 0; font: 11px var(--mono); color: var(--muted); text-align: right; }
+.acciones { display: flex; gap: 6px; }
+.candado, .gotero { flex: 1; height: 32px; border-radius: 9px; border: 1px solid var(--rule-2); background: var(--raised); color: var(--text); padding: 0; display: grid; place-items: center; font-size: 14px; }
+.candado[aria-pressed="true"] { border-color: var(--warn); background: #ffd27a22; }
+.gotero svg { width: 15px; height: 15px; }
+.color .pie { display: flex; justify-content: space-between; align-items: center; font: 12px var(--mono); color: var(--dim); direction: ltr; }
+.color .pie input { width: 8ch; background: transparent; border: 0; padding: 2px 0; font: 600 13px var(--mono); color: var(--text); text-align: right; }
 .color .pie input.mal { color: #ff8fa6; }
 .tip { font-size: 12px; color: var(--dim); text-align: center; margin: 0; }
 .recientes { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
@@ -261,12 +260,23 @@ select { width: 100%; background: var(--field); border: 1px solid var(--rule); b
 /* Celular: la barra de pestañas flota abajo, como una app */
 @media (max-width: 640px) {
   .wrap { padding-bottom: calc(92px + env(safe-area-inset-bottom, 0px)); }
-  .tabs { position: fixed; z-index: 25; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+  /* Vidrio líquido (solo celular): fondo translúcido que desenfoca y satura lo de atrás, con brillo en el borde de arriba */
+  .tabs { position: fixed; z-index: 25; left: 50%; transform: translateX(-50%); bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    display: flex; gap: 2px; padding: 4px; border-radius: 999px; background: var(--vidrio); border: 1px solid var(--vidrio-borde);
+    backdrop-filter: blur(22px) saturate(180%); -webkit-backdrop-filter: blur(22px) saturate(180%);
+    box-shadow: inset 0 1px 0 var(--vidrio-brillo), inset 0 -1px 1px rgba(255,255,255,.05), 0 10px 28px var(--sombra); }
+  .tabs::before { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: -1;
+    background: linear-gradient(180deg, rgba(255,255,255,.14), rgba(255,255,255,0) 55%), radial-gradient(120% 90% at 50% 120%, rgba(255,255,255,.08), transparent 60%); }
+  .tabs button { min-width: 76px; gap: 1px; border-radius: 999px; padding: 5px 12px 4px; font-size: 11.5px; }
+  .tabs button svg { width: 21px; height: 21px; }
+  .tabs button[aria-selected="true"] { background: var(--vidrio-activo); box-shadow: inset 0 1px 0 var(--vidrio-brillo), 0 1px 4px rgba(0,0,0,.12); }
   #aviso { bottom: calc(86px + env(safe-area-inset-bottom, 0px)); }
   .campos { grid-template-columns: 1fr; }
   .escena.simple { font-size: 24px; }
   .escena.mundo { min-height: 200px; }
-  .color { width: 84px; }
+  .color { width: calc((100% - 16px) / 3); min-width: 0; padding: 7px; }
+  .color .pie input { width: 7ch; font-size: 12px; }
+  .muestra { height: 64px; }
   .tooltip { font-size: 15px; }
   h1 { font-size: 18px; }
 }
@@ -975,9 +985,10 @@ select { width: 100%; background: var(--field); border: 1px solid var(--rule); b
     S.colores.forEach(function (h, i) {
       var d = document.createElement("div"); d.className = "color" + (S.fijos[i] ? " fijo" : ""); d.draggable = true;
       if (!SIN_MOV.matches && (caen === "todas" || caen === i || (Array.isArray(caen) && caen.indexOf(i) >= 0))) { d.classList.add("cae"); d.style.setProperty("--i", n++); }
-      d.innerHTML = '<div class="muestra" style="background:' + h + '"><input type="color" id="c' + i + '" value="' + h.toLowerCase() + '" aria-label="#' + (i + 1) + '">' +
-        '<button type="button" class="candado" aria-pressed="' + S.fijos[i] + '" aria-label="🔒 #' + (i + 1) + '">' + (S.fijos[i] ? "🔒" : "🔓") + "</button>" + GOTERO(i) + "</div>" +
-        '<div class="pie"><span>#' + (i + 1) + '</span><input type="text" id="h' + i + '" value="' + h.slice(1).toLowerCase() + '" maxlength="7" spellcheck="false" aria-label="HEX #' + (i + 1) + '"></div>';
+      d.innerHTML = '<div class="muestra" style="background:' + h + '"><input type="color" id="c' + i + '" value="' + h.toLowerCase() + '" aria-label="#' + (i + 1) + '"></div>' +
+        '<div class="pie"><span>#' + (i + 1) + '</span><input type="text" id="h' + i + '" value="' + h.slice(1).toLowerCase() + '" maxlength="7" spellcheck="false" aria-label="HEX #' + (i + 1) + '"></div>' +
+        '<div class="acciones">' + GOTERO(i) +
+        '<button type="button" class="candado" aria-pressed="' + S.fijos[i] + '" aria-label="🔒 #' + (i + 1) + '">' + (S.fijos[i] ? "🔒" : "🔓") + "</button></div>";
       var gota = d.querySelector(".gotero");
       if (gota) gota.onclick = function (e) {
         e.preventDefault();
