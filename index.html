@@ -10,7 +10,7 @@
 <link rel="icon" type="image/png" sizes="64x64" href="avatar-64.png">
 <link rel="apple-touch-icon" href="avatar-180.png">
 <!-- Vista al compartir el link (Discord, WhatsApp…): la barra de color sale de theme-color -->
-<meta name="theme-color" content="#AAB4FF">
+<meta name="theme-color" content="#4FE3F0">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Generador de colores HEX para Minecraft">
 <meta property="og:title" content="Minecraft HEX Colors">
@@ -26,35 +26,36 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: una sola columna con tres pestañas (Colores / Letras / Símbolos). En el celular las pestañas
-   son una barra flotante abajo, con icono y nombre. Gris medio con una "linterna" plateada que sigue al dedo o al cursor.
+/* Colores: azul diamante (#0A1A3F) con acento cian; el modo claro es un azul muy suave.
+   Layout: una sola columna con tres pestañas (Colores / Letras / Símbolos). En el celular las pestañas
+   son una barra flotante abajo, con icono y nombre. Una "linterna" plateada que sigue al dedo o al cursor.
    Dos temas: oscuro (por defecto) y claro, con el botón de sol y luna junto a los idiomas. */
 :root {
   color-scheme: dark;
-  --ink: #26282d;
-  --deck: #303238;
-  --raised: #3c3f46;
-  --field: #212327;
-  --rule: #42454d;
-  --rule-2: #555962;
+  --ink: #0a1a3f;
+  --deck: #102552;
+  --raised: #183166;
+  --field: #081533;
+  --rule: #213c80;
+  --rule-2: #2d4e9c;
   --text: #f4f5f7;
-  --muted: #c9ccd3;
-  --dim: #9da1ab;
-  --accent: #aab4ff;
-  --accent-ink: #1c2040;
-  --accent-suave: #aab4ff22;
+  --muted: #c6d3f0;
+  --dim: #90a4d0;
+  --accent: #4fe3f0;
+  --accent-ink: #04252b;
+  --accent-suave: #4fe3f022;
   --hover: #ffffff14;
   --sombra: #00000070;
-  --holder: #7f848e;
+  --holder: #7189bd;
   --silver: 236, 239, 245;
   --luz: 1;
   --warn: #ffd27a;
   /* Vidrio líquido de la barra */
-  --vidrio: rgba(44, 46, 52, .72);
+  --vidrio: rgba(14, 34, 80, .72);
   --vidrio-borde: rgba(255, 255, 255, .16);
   --vidrio-brillo: rgba(255, 255, 255, .28);
   --vidrio-activo: rgba(255, 255, 255, .11);
-  --tab-texto: #a6aab3;
+  --tab-texto: #9db2de;
   --display: "Unbounded", "Arial Black", system-ui, sans-serif;
   --sans: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -64,29 +65,29 @@
 }
 :root[data-theme="light"] {
   color-scheme: light;
-  --ink: #e6e8ec;
-  --deck: #f5f6f8;
+  --ink: #e3ecfa;
+  --deck: #f4f8fe;
   --raised: #ffffff;
-  --field: #eceef1;
-  --rule: #d4d7de;
-  --rule-2: #c0c4cd;
-  --text: #1c1e23;
-  --muted: #474b54;
-  --dim: #6a6f79;
-  --accent: #4b57d1;
+  --field: #e8f0fb;
+  --rule: #c9d7ee;
+  --rule-2: #b3c5e4;
+  --text: #0f1c3a;
+  --muted: #3a4a6b;
+  --dim: #5d6e91;
+  --accent: #1877d6;
   --accent-ink: #ffffff;
-  --accent-suave: #4b57d11c;
+  --accent-suave: #1877d61c;
   --hover: #0000000d;
   --sombra: #0000002e;
-  --holder: #8b9099;
-  --silver: 120, 130, 155;
+  --holder: #8494b4;
+  --silver: 70, 110, 180;
   --luz: .8;
   --warn: #9a6400;
-  --vidrio: rgba(250, 251, 253, .72);
+  --vidrio: rgba(244, 248, 254, .72);
   --vidrio-borde: rgba(255, 255, 255, .75);
   --vidrio-brillo: rgba(255, 255, 255, .9);
   --vidrio-activo: rgba(255, 255, 255, .7);
-  --tab-texto: #5b606a;
+  --tab-texto: #52648a;
 }
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
